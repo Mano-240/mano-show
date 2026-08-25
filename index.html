@@ -3,78 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WEB RADIO MANO SHOW - AO VIVO</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a7bb5">
+<title>MANO Web Rádio - App Oficial</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:linear-gradient(180deg,#0a7bb5 0%,#065a86 100%);color:#fff;text-align:center;font-family:Arial,Helvetica,sans-serif;min-height:100vh;padding:15px}
-.top{background:#e53935;padding:7px 16px;border-radius:20px;display:inline-block;margin-top:10px;font-size:12px;font-weight:bold;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-h1{font-size:24px;margin:18px 0 5px;font-weight:900;text-shadow:0 2px 4px rgba(0,0,0,0.3)}
-.sub{font-size:13px;opacity:0.9;margin-bottom:15px}
-.card{width:100%;max-width:380px;margin:15px auto;background:#fff;border-radius:24px;padding:20px;color:#111;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-.card img.logo{width:130px;height:130px;border-radius:18px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
-.card h2{margin:15px 0 4px;font-size:20px;color:#0a7bb5}
-.card p.desc{font-size:13px;color:#666}
-.play-btn{width:85px;height:85px;background:linear-gradient(135deg,#0a7bb5,#0ea5e9);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:22px auto;cursor:pointer;color:#fff;font-size:38px;border:none;box-shadow:0 6px 18px rgba(10,123,181,0.5);transition:0.2s}
-.play-btn:active{transform:scale(0.92)}
-.status{font-size:12px;padding:6px 12px;border-radius:20px;background:#e8f5e9;color:#2e7d32;display:inline-block;margin-top:5px}
-audio{display:none}
-.links{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.links a{background:rgba(255,255,255,0.15);padding:8px 14px;border-radius:20px;color:#fff;text-decoration:none;font-size:12px;font-weight:bold}
+body{background:radial-gradient(circle at top,#0ea5e9,#0a3d62);color:#fff;font-family:Arial;text-align:center;min-height:100vh;padding:0 15px 20px}
+.menu{background:#042e4a;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;margin:0 -15px 15px}
+.menu .logo-text{font-weight:900;font-size:15px}
+.menu a{color:#fff;text-decoration:none;font-size:11px;background:rgba(255,255,255,.15);padding:6px 10px;border-radius:20px;margin-left:6px}
+.top{background:#e53935;padding:7px 18px;border-radius:20px;display:inline-block;margin-top:5px;font-size:12px;font-weight:bold}
+h1{font-size:27px;margin:12px 0 2px;font-weight:900}.sub{font-size:13px;opacity:.9;margin-bottom:16px}
+.install{background:#ffeb00;color:#000;padding:12px;border-radius:12px;margin:15px auto;max-width:400px;font-weight:900;cursor:pointer;display:none}
+.card{max-width:400px;margin:0 auto;background:#fff;border-radius:26px;padding:22px;color:#111;box-shadow:0 15px 40px rgba(0,0,0,.5)}
+.logo-img{width:165px;height:165px;border-radius:22px;object-fit:cover}
+.card h2{margin:12px 0 2px;font-size:22px;color:#0a7bb5;font-weight:900}.desc{font-size:13px;color:#666}
+.play-btn{width:90px;height:90px;background:linear-gradient(135deg,#0a7bb5,#22d3ee);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:20px auto;color:#fff;font-size:40px;border:none;cursor:pointer}
+.status{font-size:12px;padding:8px 15px;border-radius:20px;background:#ffebee;color:#c62828;display:inline-block;font-weight:bold}
+.social{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.social a{padding:13px;border-radius:13px;color:#fff;text-decoration:none;font-weight:bold;font-size:13px;display:flex;align-items:center;justify-content:center}
+.wpp{background:#25D366}.fb{background:#1877F2}.insta{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}.tiktok{background:#000}.yt{background:#FF0000}
+.contact{background:rgba(255,255,255,.12);margin:20px auto 0;max-width:400px;padding:14px;border-radius:14px;font-size:12px;line-height:1.7}
+.contact a{color:#7dd3fc;text-decoration:none;font-weight:bold}
+.footer{margin-top:20px;font-size:11px;opacity:.7}
 </style>
 </head>
 <body>
-
+<div class="menu"><div class="logo-text">📻 MANO SHOW</div><div><a href="mailto:manoshowwebradio@gmail.com">📧 E-mail</a><a href="https://wa.me/554791452690" target="_blank">📞 Zap</a></div></div>
 <div class="top">🔴 AO VIVO DIRETO DE BLUMENAU SC</div>
-<h1>WEB RADIO MANO SHOW</h1>
-<div class="sub">Direto de Blumenau para todo o Brasil!</div>
-
+<h1>MANO Web Rádio</h1><div class="sub">MANO Show - App Oficial</div>
+<div class="install" id="installBtn">📲 INSTALAR APP NO CELULAR</div>
 <div class="card">
-<img class="logo" src="https://images.zeno.fm/2nGEcE8vQJy3v8osWgYYmsapApM/rs:fill:300:300/g:ce:0:0/aHR0cHM6Ly9kM3Qzb3pmdG1kbWgzaS5jbG91ZGZyb250Lm5ldC9zdGFnaW5nL3BvZGNhc3RfdXBsb2FkZWRfbm9sb2dvLzIxMTExOTQvMjExMTE5NC0xNzEwMTY2MzQ0MjQxLWZhNjY4MjEwYTk1M2IuanBn" onerror="this.src='https://via.placeholder.com/150?text=MANO'">
-<h2>MANO SHOW</h2>
-<p class="desc">A melhor programação 24h no ar</p>
-
-<button class="play-btn" id="btn">▶️</button>
-<div class="status" id="status">Toque para ouvir</div>
-
-<audio id="radio" preload="none">
-<source src="https://stream-175.zeno.fm/0ctt516rnhovv" type="audio/mpeg">
-</audio>
-</div>
-
-<div class="links">
-<a href="https://wa.me/5547999999999" target="_blank">💬 WHATSAPP</a>
-<a href="#" target="_blank">📘 FACEBOOK</a>
-<a href="#" target="_blank">📸 INSTAGRAM</a>
-</div>
-
+<img class="logo-img" src="logo-mano.png" alt="MANO">
+<h2>MANO SHOW</h2><p class="desc">Toque no play para ouvir ao vivo</p>
+<button class="play-btn" id="btn">▶️</button><div class="status" id="status">TOQUE PARA OUVIR</div>
+<audio id="radio" preload="none"><source src="https://stream-175.zeno.fm/0ctt516rnhovv" type="audio/mpeg"></audio>
+<div class="social">
+<a class="wpp" href="https://wa.me/554791452690?text=Olá%20MANO%20Show!%20Estou%20ouvindo%20a%20rádio%20📻" target="_blank">💬 WhatsApp</a>
+<a class="fb" href="https://www.facebook.com/share/188ZhfgmJh/" target="_blank">📘 Facebook</a>
+<a class="insta" href="https://www.instagram.com/manoshow.oficial?igsh=MWFoa2Vnb3JoY3RjeQ==" target="_blank">📸 Instagram</a>
+<a class="tiktok" href="https://www.tiktok.com/@manoshowwebradio?_r=1&_t=ZS-99BqZ2JkJtt" target="_blank">🎵 TikTok</a>
+<a class="yt" href="https://youtube.com/@webradiomanoshow?si=jtxe9p0NoYxKHpSN" target="_blank" style="grid-column:span 2">▶️ YouTube</a>
+</div></div>
+<div class="contact">📧 manoshowwebradio@gmail.com | 📱 (47) 9145-2690<br>📍 Blumenau - SC | 24h no ar</div>
+<div class="footer">© 2026 MANO Web Rádio</div>
 <script>
-const audio = document.getElementById('radio');
-const btn = document.getElementById('btn');
-const status = document.getElementById('status');
-let playing = false;
-
-btn.onclick = async () => {
-  try {
-    if(!playing){
-      await audio.play();
-      playing = true;
-      btn.innerHTML = '⏸️';
-      status.innerHTML = '🔴 Tocando ao vivo';
-      status.style.background = '#ffebee';
-      status.style.color = '#c62828';
-    } else {
-      audio.pause();
-      playing = false;
-      btn.innerHTML = '▶️';
-      status.innerHTML = 'Pausado - Toque para ouvir';
-      status.style.background = '#e8f5e9';
-      status.style.color = '#2e7d32';
-    }
-  } catch(e){
-    status.innerHTML = 'Clique novamente para ouvir';
-  }
-};
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+const a=document.getElementById('radio'),b=document.getElementById('btn'),s=document.getElementById('status');let p=false;
+b.onclick=async()=>{if(!p){try{await a.play();p=true;b.innerHTML='⏸️';s.innerHTML='🔴 TOCANDO AO VIVO';s.style.background='#e8f5e9';s.style.color='#2e7d32';}catch(e){s.innerHTML='Toque novamente';}}else{a.pause();p=false;b.innerHTML='▶️';s.innerHTML='TOQUE PARA OUVIR';s.style.background='#ffebee';s.style.color='#c62828';}};
+let deferredPrompt;const installBtn=document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='block';});
+installBtn.addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;installBtn.style.display='none';}});
 </script>
-
 </body>
 </html>
