@@ -1,102 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-<link rel="icon" href="logo.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WEB RADIO MANO SHOW</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:linear-gradient(180deg,#104fa0 0%,#0e6ad6 100%);min-height:100vh;color:#fff;padding-bottom:100px}
-.top{padding:18px 10px 10px;text-align:center}
-.badge{background:#e53935;color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:bold;display:inline-block}
-h1{margin:18px 0 18px;font-size:22px;letter-spacing:0.5px}
-.logo-box{width:84%;max-width:320px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 8px 25px #0006;border:3px solid #ffffff30;background:#fff}
-.logo-box img{width:100%;display:block}
-.tocando{width:92%;max-width:380px;margin:22px auto;background:#ffffff30;backdrop-filter:blur(10px);border-radius:50px;padding:12px 18px;display:flex;align-items:center;gap:12px}
-.ic{width:42px;height:42px;background:#ffffff40;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
-.tocando small{font-size:13px;opacity:.9;display:block;text-align:left}
-.tocando b{font-size:14px;display:block;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player-row{width:92%;max-width:380px;margin:20px auto;display:flex;align-items:center;gap:12px}
-.btn-pausar{flex:1;background:#0d62ff;border:none;color:#fff;padding:18px;border-radius:50px;font-size:22px;font-weight:900;letter-spacing:1px;box-shadow:0 5px 15px #0004}
-.btn-rec{width:68px;height:68px;background:#ff1e1e;border-radius:50%;border:none;box-shadow:0 4px 12px #0004;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
-.dot{width:18px;height:18px;background:#fff;border-radius:50%;display:block;margin-bottom:3px}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(0deg,#0b4aaf,#1566d6);padding:12px 6px 18px;display:flex;justify-content:space-around;border-top:1px solid #ffffff20}
-.b-item{text-align:center;text-decoration:none;color:#fff}
-.b-icon{width:52px;height:52px;background:#0d62ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 5px;box-shadow:0 3px 8px #0004}
-.b-item small{font-size:11px;font-weight:bold}
-#menuModal{display:none;position:fixed;inset:0;background:#000a;z-index:99;align-items:flex-end}
-#menuContent{background:#0f4aa8;width:100%;border-radius:20px 20px 0 0;padding:20px}
-#menuContent a{display:block;padding:14px;border-radius:10px;margin:8px 0;color:#fff;text-decoration:none;font-weight:bold;text-align:center}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+body{margin:0;background:#0a7bb5;color:#fff;text-align:center;font-family:Arial}
+.top{background:#e53935;padding:6px 14px;border-radius:20px;display:inline-block;margin-top:18px;font-size:12px;font-weight:bold}
+h1{font-size:20px;margin:14px 0}
+iframe{width:92%;max-width:360px;height:400px;border:0;border-radius:16px;background:#fff}
 </style>
 </head>
 <body>
-<div class="top">
-<div class="badge">• AO VIVO BLUMENAU SC</div>
+<div class="top">🔴 AO VIVO BLUMENAU SC</div>
 <h1>WEB RADIO MANO SHOW</h1>
-<div class="logo-box"><img src="logo.webp" onerror="this.src='https://i.imgur.com/8Km9tLL.png'" alt="MANO"></div>
-<div class="tocando">
-<div class="ic">🎵</div>
-<div><small>Tocando agora</small><b id="musica">Gusttavo Lima • Apelido Carinhoso</b></div>
-</div>
-<div class="player-row">
-<button class="btn-pausar" id="btnPlay" onclick="tocar()">⏸ PAUSAR</button>
-<button class="btn-rec" id="btnRec"><span class="dot" id="dotRec"></span><small id="txtRec">REC</small></button>
-</div>
-</div>
-
-<div class="bottom">
-<a class="b-item" href="https://wa.me/554791452690"><div class="b-icon">💬</div><small>WhatsApp</small></a>
-<a class="b-item" href="https://www.facebook.com/share/1DiaX5i3DQ/"><div class="b-icon">f</div><small>Facebook</small></a>
-<a class="b-item" href="https://www.instagram.com/manoshow.oficial"><div class="b-icon">📷</div><small>Instagram</small></a>
-<a class="b-item" href="https://www.tiktok.com/@manoshowwebradio"><div class="b-icon">♪</div><small>TikTok</small></a>
-<a class="b-item" href="https://youtube.com/@webradiomanoshow"><div class="b-icon">▶</div><small>YouTube</small></a>
-<a class="b-item" href="#" onclick="abrirMenu()"><div class="b-icon">☰</div><small>Menu</small></a>
-</div>
-
-<div id="menuModal" onclick="fecharMenu()">
-<div id="menuContent" onclick="event.stopPropagation()">
-<h3 style="text-align:center;margin-bottom:12px">CONTATO</h3>
-<a href="mailto:Manoshowwebradio@gmail.com" style="background:#EA4335;font-size:15px">📧 Manoshowwebradio@gmail.com</a>
-<a href="#" onclick="fecharMenu()" style="background:#ffffff20">Fechar</a>
-<div id="statusGrav" style="margin-top:12px;font-size:12px;opacity:.8;text-align:center"></div>
-</div>
-</div>
-
-<audio id="radio" crossorigin="anonymous" src="https://stream-175.zeno.fm/0ctt516rnhovv"></audio>
-<script>
-let tocando=true; const radio=document.getElementById('radio');
-radio.play().catch(()=>{tocando=false;document.getElementById('btnPlay').innerText='▶ TOCAR'});
-function tocar(){if(!tocando){radio.play();document.getElementById('btnPlay').innerText='⏸ PAUSAR';tocando=true}else{radio.pause();document.getElementById('btnPlay').innerText='▶ TOCAR';tocando=false}}
-let musicas=["Gusttavo Lima • Apelido Carinhoso","Zé Neto • Largado às Traças","Maiara e Maraisa • Medo Bobo","Ana Castela • Pipoco"];
-let j=0; setInterval(()=>{j=(j+1)%musicas.length;document.getElementById('musica').innerText=musicas[j]},5000);
-function abrirMenu(){document.getElementById('menuModal').style.display='flex'}
-function fecharMenu(){document.getElementById('menuModal').style.display='none'}
-let gravando=false, recorder, chunks=[];
-const btnRec=document.getElementById('btnRec'), dotRec=document.getElementById('dotRec'), txtRec=document.getElementById('txtRec'), statusGrav=document.getElementById('statusGrav');
-btnRec.onclick=async()=>{
-if(!gravando){
-try{
-let stream=radio.captureStream?radio.captureStream():radio.mozCaptureStream();
-recorder=new MediaRecorder(stream); chunks=[];
-recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
-recorder.onstop=()=>{
-const blob=new Blob(chunks,{type:'audio/webm'});
-const url=URL.createObjectURL(blob);
-const a=document.createElement('a'); a.href=url; a.download='MANO_SHOW_'+Date.now()+'.webm'; a.click();
-statusGrav.innerText='✅ Música salva no celular!';
-};
-recorder.start(); gravando=true;
-btnRec.style.background='#fff'; dotRec.style.background='red'; dotRec.style.animation='blink 0.6s infinite';
-txtRec.innerText='PARAR'; txtRec.style.color='red'; statusGrav.innerText='🔴 Gravando... clique PARAR pra salvar';
-}catch(e){alert('Navegador bloqueou gravação direta. Tenta no Chrome do Android que vai!');}
-}else{
-if(recorder && recorder.state==='recording') recorder.stop();
-gravando=false; btnRec.style.background='#ff1e1e'; dotRec.style.background='#fff'; dotRec.style.animation='none'; txtRec.innerText='REC'; txtRec.style.color='#fff';
-}
-};
-</script>
+<iframe src="https://zeno.fm/player/web-radio-mano-show/" allow="autoplay"></iframe>
+<p style="font-size:12px;margin-top:12px;opacity:0.8">Toque no ▶️ para ouvir</p>
 </body>
 </html>
