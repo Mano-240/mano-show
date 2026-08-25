@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mano Show - Oficial</title>
+<style>
+body{margin:0;background:#111;color:#fff;font-family:Arial;text-align:center;padding:20px}
+.logo{width:150px;height:150px;background:#fff;border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:50px;color:#000}
+h1{color:#ffcc00}
+button{background:#ff0000;color:#fff;border:none;padding:18px 40px;border-radius:30px;font-size:20px;font-weight:bold;width:100%}
+.player{background:#222;padding:20px;border-radius:15px;margin:20px 0}
+a.btn{display:block;padding:14px;margin:8px 0;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold}
+.w1{background:#25D366} .w2{background:#128C7E} .face{background:#1877F2} .insta{background:#E1306C} .yt{background:#FF0000}
+</style>
+</head>
+<body>
+<div class="logo">🎙️</div>
+<h1>MANO SHOW</h1>
+<p>App Oficial - 24h no Ar</p>
+<div class="player">
+<audio id="radio" src="https://stream.zeno.fm/0u9c5p3p7x8uv"></audio>
+<button onclick="tocar()" id="btn">▶️ TOCAR RÁDIO</button>
+</div>
+<a class="btn w1" href="#">WhatsApp 1</a>
+<a class="btn w2" href="#">WhatsApp 2</a>
+<a class="btn face" href="#">Facebook</a>
+<a class="btn insta" href="#">Instagram</a>
+<a class="btn yt" href="#">YouTube</a>
+<script>
+let t=false;
+function tocar(){
+ let r=document.getElementById('radio');
+ let b=document.getElementById('btn');
+ if(!t){r.play();b.innerText='⏸️ PAUSAR';t=true}else{r.pause();b.innerText='▶️ TOCAR RÁDIO';t=false}
+}
+</script>
+</body>
+</html>
