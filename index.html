@@ -1,26 +1,59 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MANO Web Rádio</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#153775;display:flex;justify-content:center;font-family:Arial}.phone{width:100%;max-width:420px;background:linear-gradient(180deg,#1e3c7e 0%,#19438f 15%,#1750b0 30%,#1066cc 55%,#0a85e6 85%,#0993f0 100%);min-height:100vh;padding:8px 18px 24px}.status{display:flex;justify-content:space-between;color:#fff;font-size:17px;font-weight:600;padding:8px 4px 20px}.badge{background:#ff2222;color:#fff;font-size:13px;font-weight:800;padding:8px 18px;border-radius:24px;display:flex;align-items:center;gap:7px;width:fit-content;margin:10px auto 30px}.badge span{width:8px;height:8px;background:#fff;border-radius:50%;display:inline-block}h1{color:#fff;text-align:center;font-size:25px;font-weight:900;margin-bottom:28px;text-shadow:0 2px 4px rgba(0,0,0,.4)}.cover{width:100%;aspect-ratio:1/1;background:#000;border-radius:12px;overflow:hidden;margin-bottom:30px}.cover img{width:100%;height:100%;object-fit:cover;display:block}.now{background:rgba(180,200,235,.9);border-radius:40px;padding:12px 16px;display:flex;align-items:center;gap:12px;color:#fff;margin-bottom:32px}.now .ico{width:52px;height:52px;background:rgba(255,255,255,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}.now b{font-size:16px;font-weight:800;display:block;margin-top:3px}.controls{display:flex;gap:18px;align-items:flex-start;margin-bottom:44px}.play{flex:1;height:74px;background:#0166ff;border:none;border-radius:38px;color:#fff;font-size:26px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 8px 18px rgba(0,0,0,.35)}.rec{width:84px;background:transparent;border:none}.rec .dot{width:78px;height:78px;background:#ff1e1e;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto}.rec .dot i{width:22px;height:22px;background:#fff;border-radius:50%;display:block}.rec small{color:#ff0e0e;font-weight:900;font-size:16px;display:block;margin-top:8px;text-align:center}.dock{display:flex;justify-content:space-between;gap:6px}.dock a{text-decoration:none;flex:1;text-align:center}.dock .c{width:62px;height:62px;background:#0066ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff;font-weight:900}.dock small{color:#fff;font-size:13px;font-weight:800;display:block;margin-top:8px}</style></head><body><div class="phone"><div class="status"><b>14:32</b><span>📶 🔋</span></div><div class="badge"><span></span>AO VIVO BLUMENAU SC</div><h1>WEB RADIO MANO SHOW</h1><div class="cover"><img src="logo.png" id="logo"></div><div class="now"><div class="ico">🎵</div><div><small>Tocando agora</small><b id="track">Carregando...</b></div></div><div class="controls"><button class="play" id="playBtn">▶ TOCAR</button><button class="rec" id="recBtn"><div class="dot"><i></i></div><small>REC</small></button></div><div class="dock"><a href="https://wa.me/5547999999999" target="_blank"><div class="c">W</div><small>WhatsApp</small></a><a href="#" target="_blank"><div class="c">f</div><small>Facebook</small></a><a href="#" target="_blank"><div class="c">I</div><small>Instagram</small></a><a href="#" target="_blank"><div class="c">T</div><small>TikTok</small></a><a href="#" target="_blank"><div class="c">Y</div><small>YouTube</small></a><a href="#"><div class="c">☰</div><small>Menu</small></a></div></div><audio id="audio" preload="none"></audio><script>
-const STREAM_URL = "https://stream.zeno.fm/0ctt516rnhovv";
-const METADATA_URL = "https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv";
-const audio = document.getElementById("audio");
-const playBtn = document.getElementById("playBtn");
-const trackEl = document.getElementById("track");
-let playing = false;
-audio.src = STREAM_URL;
-playBtn.onclick = async () => {
-  if(!playing){
-    try{ await audio.play(); playing=true; playBtn.innerHTML="II PAUSAR"; }catch(e){ alert("Clique de novo pra tocar!"); }
-  } else { audio.pause(); playing=false; playBtn.innerHTML="▶ TOCAR"; }
-};
-// Puxa nome da música AO VIVO da Zeno
-try{
-  const es = new EventSource(METADATA_URL);
-  es.onmessage = (e)=>{
-    try{
-      const data = JSON.parse(e.data);
-      if(data.streamTitle){ trackEl.textContent = data.streamTitle; }
-    }catch{}
-  };
-  es.onerror = ()=>{ trackEl.textContent = "Mano Web Rádio - Ao Vivo"; };
-  setTimeout(()=>{ if(trackEl.textContent==="Carregando...") trackEl.textContent="Mano Web Rádio - Ao Vivo"; }, 4000);
-}catch{ trackEl.textContent="Mano Web Rádio - Ao Vivo"; }
-</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MANO Web Rádio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#153775;display:flex;justify-content:center;font-family:Arial,sans-serif}
+.phone{width:100%;max-width:420px;background:linear-gradient(180deg,#1e3c7e 0%,#19438f 15%,#1750b0 30%,#1066cc 55%,#0a85e6 85%,#0993f0 100%);min-height:100vh;padding:18px 18px 24px}
+.badge{background:#ff2222;color:#fff;font-size:13px;font-weight:800;padding:8px 18px;border-radius:24px;display:flex;align-items:center;gap:7px;width:fit-content;margin:10px auto 30px}
+.badge span{width:8px;height:8px;background:#fff;border-radius:50%;display:inline-block}
+h1{color:#fff;text-align:center;font-size:25px;font-weight:900;margin-bottom:28px;text-shadow:0 2px 4px rgba(0,0,0,.4)}
+.cover{width:100%;aspect-ratio:1/1;background:#000;border-radius:12px;overflow:hidden;margin-bottom:30px}
+.cover img{width:100%;height:100%;object-fit:cover;display:block}
+.now{background:#0166ff;border-radius:40px;padding:12px 16px;display:flex;align-items:center;gap:12px;color:#fff;margin-bottom:32px;overflow:hidden}
+.now .ico{width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.now b{font-size:16px;font-weight:800;display:block;white-space:nowrap;animation:scroll 12s linear infinite}
+.now div:last-child{overflow:hidden;flex:1}
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.controls{display:flex;gap:18px;align-items:flex-start;margin-bottom:44px}
+.play{flex:1;height:74px;background:#0166ff;border:none;border-radius:38px;color:#fff;font-size:26px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.rec{width:84px;background:transparent;border:none}
+.rec .dot{width:78px;height:78px;background:#ff1e1e;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.rec .dot i{width:22px;height:22px;background:#fff;border-radius:50%;display:block}
+.rec small{color:#ff0e0e;font-weight:900;font-size:16px;display:block;margin-top:8px;text-align:center}
+.dock{display:flex;justify-content:space-between;gap:6px}
+.dock a{text-decoration:none;flex:1;text-align:center}
+.dock .c{width:62px;height:62px;background:#0066ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff;font-weight:900;font-size:22px}
+.dock small{color:#fff;font-size:12px;font-weight:800;display:block;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="badge"><span></span>AO VIVO BLUMENAU SC</div>
+<h1>WEB RADIO MANO SHOW</h1>
+<div class="cover"><img src="logo.png"></div>
+<div class="now"><div class="ico">🎵</div><div><small>Tocando agora</small><b id="track">Carregando...</b></div></div>
+<div class="controls"><button class="play" id="playBtn">▶ TOCAR</button><button class="rec" id="recBtn"><div class="dot"><i></i></div><small>REC</small></button></div>
+<div class="dock">
+<a href="https://wa.me/5547999999999" target="_blank"><div class="c">W</div><small>WhatsApp</small></a>
+<a href="#"><div class="c">f</div><small>Facebook</small></a>
+<a href="#"><div class="c">I</div><small>Instagram</small></a>
+<a href="#"><div class="c">T</div><small>TikTok</small></a>
+<a href="#"><div class="c">Y</div><small>YouTube</small></a>
+<a href="#"><div class="c">☰</div><small>Menu</small></a>
+</div>
+</div>
+<audio id="audio" preload="none"></audio>
+<script>
+const STREAM_URL="https://stream.zeno.fm/0ctt516rnhovv";
+const METADATA_URL="https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv";
+const audio=document.getElementById("audio"),playBtn=document.getElementById("playBtn"),trackEl=document.getElementById("track");
+let playing=false;audio.src=STREAM_URL;
+playBtn.onclick=async()=>{if(!playing){try{await audio.play();playing=true;playBtn.innerHTML="II PAUSAR"}catch{}}else{audio.pause();playing=false;playBtn.innerHTML="▶ TOCAR"}};
+try{const es=new EventSource(METADATA_URL);es.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(d.streamTitle)trackEl.textContent=d.streamTitle}catch{}};es.onerror=()=>{trackEl.textContent="Mano Web Rádio - Ao Vivo"}}catch{trackEl.textContent="Mano Web Rádio - Ao Vivo"}
+</script>
+</body>
+</html>
