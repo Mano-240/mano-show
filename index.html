@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MANO SHOW</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
@@ -11,7 +10,7 @@ body{background:#1e5bb5;min-height:100vh;color:#fff;display:flex;flex-direction:
 .capa{width:85%;max-width:320px;aspect-ratio:1;border-radius:18px;overflow:hidden;box-shadow:0 8px 20px #0006;margin:10px;background:#fff}
 .capa img{width:100%;height:100%;object-fit:cover}
 .tocando{background:#ffffff30;width:95%;max-width:380px;padding:12px 16px;border-radius:30px;display:flex;align-items:center;gap:12px;margin:12px 0}
-#musica{font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:230px}
+#musica{font-weight:900;font-size:13px;width:230px}
 .player{display:flex;align-items:center;gap:14px;width:95%;max-width:380px;margin:12px 0}
 .btnPlay{flex:1;background:#1877f2;padding:18px;border-radius:30px;border:0;color:#fff;font-weight:900;font-size:20px;cursor:pointer}
 .rec{width:64px;height:64px;background:#e30613;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid #fff}
@@ -35,29 +34,34 @@ body{background:#1e5bb5;min-height:100vh;color:#fff;display:flex;flex-direction:
 </div>
 <audio id="radio" src="https://stream-175.zeno.fm/0ctt516rnhovv"></audio>
 <script>
-const audio=document.getElementById('radio'),btn=document.getElementById('playBtn'),musica=document.getElementById('musica');
+const audio=document.getElementById('radio'),btn=document.getElementById('playBtn'),el=document.getElementById('musica');
 let on=true;audio.play().catch(()=>{on=false;btn.innerHTML='▶ TOCAR'});
 function tocar(){if(!on){audio.play();btn.innerHTML='|| PAUSAR';on=true}else{audio.pause();btn.innerHTML='▶ TOCAR';on=false}}
-async function pegaMusica(){
+async function pega(){
  try{
-   let id='0ctt516rnhovv';
-   let urls=[
-     'https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/'+id+'?t='+Date.now()),
-     'https://corsproxy.io/?'+encodeURIComponent('https://api.zeno.fm/mounts/metadata/'+id),
-     'https://thingproxy.freeboard.name/fetch/'+'https://api.zeno.fm/mounts/metadata/'+id
-   ];
-   for(let u of urls){
-     try{
-       let r=await fetch(u,{cache:'no-store'}); let t=await r.text();
-       try{let j=JSON.parse(t); if(j.contents) j=JSON.parse(j.contents); if(j.title && j.title.trim()){musica.innerText=j.title; return;}}catch(e){
-         if(t && t.length<100 && t.length>3){musica.innerText=t; return;}
+   let u='https://api.allorigins.win/raw?url='+encodeURIComponent('https://zeno.fm/radio/web-radio-mano-show/');
+   let r=await fetch(u); let html=await r.text();
+   // a zeno coloca o titulo dentro do html assim: DENNIS -...
+   // vamos pegar tudo que esta perto de "Station profile"
+   let idx=html.indexOf('Station profile');
+   if(idx>-1){
+     let peda=html.substring(idx, idx+500);
+     // limpa tags
+     peda=peda.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+     // agora peda tem algo tipo "DENNIS - Dennis, Ana Castela..."
+     if(peda.length>10){
+       let titulo=peda.replace('Station profile','').replace('Station name','').trim();
+       // pega ate quebrar linha ou 100 letras
+       titulo=titulo.substring(0,100).split(' ')[0].trim();
+       if(titulo && titulo.toLowerCase().indexOf('web radio')==-1 && titulo.length>5){
+         el.innerText=titulo;
        }
-     }catch(e){}
+     }
    }
- }catch(e){}
+ }catch(e){ console.log(e); }
 }
-setInterval(pegaMusica,4000); pegaMusica();
-function gravar(){ alert('REC gravando!'); }
+setInterval(pega,4000); pega();
+function gravar(){alert('REC');}
 </script>
 </body>
 </html>
