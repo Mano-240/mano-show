@@ -10,11 +10,11 @@ body{background:#1e5bb5;min-height:100vh;color:#fff;display:flex;flex-direction:
 .capa{width:85%;max-width:320px;aspect-ratio:1;border-radius:18px;overflow:hidden;box-shadow:0 8px 20px #0006;margin:10px;background:#fff}
 .capa img{width:100%;height:100%;object-fit:cover}
 .tocando{background:#ffffff30;width:95%;max-width:380px;padding:12px 16px;border-radius:30px;display:flex;align-items:center;gap:12px;margin:12px 0}
-#musica{font-weight:900;font-size:14px;width:230px}
+#musica{font-weight:900;font-size:14px;width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player{display:flex;align-items:center;gap:14px;width:95%;max-width:380px;margin:12px 0}
 .btnPlay{flex:1;background:#1877f2;padding:18px;border-radius:30px;border:0;color:#fff;font-weight:900;font-size:20px;cursor:pointer}
 .rec{width:64px;height:64px;background:#e30613;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid #fff}
-.nav{width:100%;max-width:420px;display:flex;justify-content:space-around;margin-top:24px}
+.nav{width:100%;max-width:420px;display:flex;justify-content:space-around;margin-top:24px;flex-wrap:wrap;gap:10px}
 .nav a{color:#fff;text-decoration:none;font-size:10px;font-weight:bold;display:flex;flex-direction:column;align-items:center;gap:6px}
 .ico{width:52px;height:52px;background:#1877f2;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
 </style>
@@ -38,6 +38,35 @@ const audio=document.getElementById('radio'),btn=document.getElementById('playBt
 let on=true; audio.play().catch(()=>{on=false;btn.innerHTML='▶ TOCAR'});
 function tocar(){if(!on){audio.play();btn.innerHTML='|| PAUSAR';on=true}else{audio.pause();btn.innerHTML='▶ TOCAR';on=false}}
 function gravar(){alert('Gravando!');}
+function atualizaMusica(){
+  fetch('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv')
+   .then(r=>r.text()).then(t=>{
+      try{
+        let m = t.match(/"streamTitle":"([^"]+)"/);
+        if(m && m[1] && m[1].trim()!=""){
+          let nome = m[1];
+          if(!nome.toLowerCase().includes("zeno")){
+            el.innerHTML = nome;
+          }
+        }
+      }catch(e){}
+    }).catch(()=>{});
+}
+try{
+  const es = new EventSource('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
+  es.onmessage = (e)=>{
+    try{
+      const d = JSON.parse(e.data);
+      if(d && d.streamTitle && d.streamTitle.trim()!=""){
+        if(!d.streamTitle.toLowerCase().includes("zeno")){
+          el.innerHTML = d.streamTitle;
+        }
+      }
+    }catch(err){}
+  };
+}catch(err){}
+setInterval(atualizaMusica, 15000);
+atualizaMusica();
 </script>
 </body>
 </html>
