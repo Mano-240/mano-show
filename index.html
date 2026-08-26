@@ -3,20 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mano Show Web Rádio</title>
+<title>WEB RADIO MANO SHOW</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body{margin:0;font-family:Arial;background:#0a0e1a;color:#fff}
-.header{padding:20px;text-align:center}
-.menu-btn{position:fixed;left:15px;top:15px;font-size:28px;background:#111827;border:none;color:#fff;width:45px;height:45px;border-radius:8px;cursor:pointer;z-index:500}
-.logo{width:120px;height:120px;border-radius:50%;border:3px solid #3b82f6}
-.player-box{background:rgba(255,255,255,0.05);border-radius:20px;padding:20px;max-width:400px;margin:20px auto}
-.play-btn{width:80px;height:80px;border-radius:50%;background:#3b82f6;border:none;color:#fff;font-size:30px;margin:20px auto;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.socials{display:flex;justify-content:center;gap:10px;margin-top:20px}
-.socials a{width:45px;height:45px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:20px}
-.sidebar{position:fixed;top:0;left:-300px;width:260px;height:100%;background:#111827;padding:20px;transition:0.3s;z-index:1001}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial;background:#1e4bb8;color:#fff;min-height:100vh;padding-bottom:90px}
+.badge{text-align:center;padding-top:25px}
+.badge span{background:#ff0000;color:#fff;padding:10px 28px;border-radius:25px;font-weight:900;font-size:14px}
+.badge span::before{content:"● ";animation:pisca 1s infinite}
+@keyframes pisca{0%,100%{opacity:1}50%{opacity:0}}
+h1{text-align:center;font-size:28px;margin:20px 10px;font-weight:900}
+.cover{width:88%;max-width:380px;margin:20px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.cover img{width:100%;display:block}
+.play-big{background:#fff;color:#1e4bb8;width:75px;height:75px;border-radius:50%;border:none;font-size:32px;margin:20px auto;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+.socials{display:flex;justify-content:center;gap:12px;margin:20px 0}
+.socials a{width:48px;height:48px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:21px;text-decoration:none}
+.player{width:92%;max-width:400px;margin:0 auto;background:#c7d7ff;border-radius:25px;padding:14px 18px;color:#1e3a8a;display:flex;align-items:center;gap:12px;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);box-shadow:0 -2px 20px rgba(0,0,0,0.3)}
+.player i{font-size:24px;color:#7c3aed;background:#fff;min-width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.tocando{flex:1;overflow:hidden}
+.tocando small{font-size:12px}
+.tocando div{font-weight:bold;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-btn{position:fixed;left:12px;top:12px;background:rgba(0,0,0,0.3);color:#fff;border:none;width:44px;height:44px;border-radius:10px;font-size:22px;z-index:500;backdrop-filter:blur(5px)}
+.sidebar{position:fixed;top:0;left:-280px;width:270px;height:100%;background:#111827;padding:20px;transition:0.3s;z-index:1001}
 .sidebar.open{left:0}
-.sidebar a{display:flex;gap:10px;color:#fff;text-decoration:none;padding:12px 0;border-bottom:1px solid #222}
+.sidebar a{color:#fff;text-decoration:none;display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #222;font-size:14px}
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;z-index:1000}
 .overlay.show{display:block}
 </style>
@@ -33,27 +43,36 @@ body{margin:0;font-family:Arial;background:#0a0e1a;color:#fff}
 <a href="https://youtube.com/@webradiomanoshow" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>
 </div>
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
-<div class="header">
-<img src="https://i.imgur.com/8Km9tLL.png" class="logo">
-<h1>MANO <span style="color:#3b82f6">SHOW</span></h1>
-<p>Sua Web Rádio 24h no ar</p>
-<div class="player-box">
-<div style="color:#3b82f6;font-size:12px">♪ TOCANDO AGORA</div>
-<div>Mano Show - Ao Vivo</div>
-<button class="play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
+
+<div class="badge"><span>AO VIVO BLUMENAU SC</span></div>
+<h1>WEB RADIO MANO SHOW</h1>
+
+<div class="cover">
+<img src="https://i.imgur.com/3QJ4z2l.jpeg">
+</div>
+
+<button class="play-big" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
 <audio id="radio" src="https://stream.zeno.fm/t8c42kmdn48uv"></audio>
+
 <div class="socials">
-<a href="https://wa.me/554791452690" target="_blank"><i class="fa-brands fa-whatsapp" style="color:#25D366"></i></a>
+<a href="https://wa.me/554791452690" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
 <a href="https://www.facebook.com/share/1DSuwkVnxz/" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
 <a href="https://www.instagram.com/manoshow.oficial" target="_blank"><i class="fa-brands fa-instagram"></i></a>
 <a href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
 <a href="https://youtube.com/@webradiomanoshow" target="_blank"><i class="fa-brands fa-youtube"></i></a>
 </div>
+
+<div class="player">
+<i class="fa-solid fa-music"></i>
+<div class="tocando">
+<small>Tocando agora</small>
+<div id="musica">Mano Show Web Rádio - Ao Vivo</div>
 </div>
 </div>
+
 <script>
 function toggleMenu(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show');}
-function togglePlay(){var r=document.getElementById('radio');var i=document.getElementById('playIcon');if(r.paused){r.play();i.className='fa-solid fa-pause'}else{r.pause();i.className='fa-solid fa-play'}}
+function togglePlay(){let r=document.getElementById('radio');let i=document.getElementById('playIcon');if(r.paused){r.play();i.className='fa-solid fa-pause';}else{r.pause();i.className='fa-solid fa-play';}}
 </script>
 </body>
 </html>
