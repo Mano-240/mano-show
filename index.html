@@ -2,58 +2,64 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MANO Web Rádio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mano Show Web Rádio</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#153775;display:flex;justify-content:center;font-family:Arial,sans-serif}
-.phone{width:100%;max-width:420px;background:linear-gradient(180deg,#1e3c7e 0%,#19438f 15%,#1750b0 30%,#1066cc 55%,#0a85e6 85%,#0993f0 100%);min-height:100vh;padding:18px 18px 24px}
-.badge{background:#ff2222;color:#fff;font-size:13px;font-weight:800;padding:8px 18px;border-radius:24px;display:flex;align-items:center;gap:7px;width:fit-content;margin:10px auto 30px}
-.badge span{width:8px;height:8px;background:#fff;border-radius:50%;display:inline-block}
-h1{color:#fff;text-align:center;font-size:25px;font-weight:900;margin-bottom:28px;text-shadow:0 2px 4px rgba(0,0,0,.4)}
-.cover{width:100%;aspect-ratio:1/1;background:#000;border-radius:12px;overflow:hidden;margin-bottom:30px}
-.cover img{width:100%;height:100%;object-fit:cover;display:block}
-.now{background:#0166ff;border-radius:40px;padding:12px 16px;display:flex;align-items:center;gap:12px;color:#fff;margin-bottom:32px;overflow:hidden}
-.now .ico{width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.now b{font-size:16px;font-weight:800;display:block;white-space:nowrap;animation:scroll 12s linear infinite}
-.now div:last-child{overflow:hidden;flex:1}
-@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.controls{display:flex;gap:18px;align-items:flex-start;margin-bottom:44px}
-.play{flex:1;height:74px;background:#0166ff;border:none;border-radius:38px;color:#fff;font-size:26px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 8px 18px rgba(0,0,0,.35)}
-.rec{width:84px;background:transparent;border:none}
-.rec .dot{width:78px;height:78px;background:#ff1e1e;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto}
-.rec .dot i{width:22px;height:22px;background:#fff;border-radius:50%;display:block}
-.rec small{color:#ff0e0e;font-weight:900;font-size:16px;display:block;margin-top:8px;text-align:center}
-.dock{display:flex;justify-content:space-between;gap:6px}
-.dock a{text-decoration:none;flex:1;text-align:center}
-.dock .c{width:62px;height:62px;background:#0066ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff;font-weight:900;font-size:22px}
-.dock small{color:#fff;font-size:12px;font-weight:800;display:block;margin-top:8px}
+body{margin:0;font-family:Arial,sans-serif;background:#0a0e1a;color:#fff}
+.header{padding:20px;background:linear-gradient(180deg,#1a2a4a,#0a0e1a);text-align:center;position:relative}
+.menu-btn{position:absolute;left:15px;top:20px;font-size:26px;background:none;border:none;color:#fff;cursor:pointer;z-index:10}
+.logo{width:120px;height:120px;border-radius:50%;border:3px solid #3b82f6;margin:0 auto 15px;object-fit:cover;background:#111}
+h1{margin:10px 0 5px;font-size:28px} h1 span{color:#3b82f6}
+.slogan{color:#9ca3af;margin-bottom:20px}
+.player-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:25px;max-width:400px;margin:0 auto}
+.now{color:#3b82f6;font-size:13px;letter-spacing:2px;margin-bottom:15px}
+#musicTitle{font-size:18px;min-height:24px}
+.play-btn{width:80px;height:80px;border-radius:50%;background:#3b82f6;border:none;color:#fff;font-size:30px;margin:20px auto;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.socials{display:flex;justify-content:center;gap:12px;margin-top:25px;flex-wrap:wrap}
+.socials a{width:45px;height:45px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:20px}
+.sidebar{position:fixed;top:0;left:-280px;width:260px;height:100%;background:#111827;padding:25px;transition:0.3s;z-index:1000;text-align:left}
+.sidebar.open{left:0}
+.sidebar h3{color:#3b82f6;margin-top:50px}
+.sidebar a{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:14px;word-break:break-all}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;z-index:999}
+.overlay.show{display:block}
 </style>
 </head>
 <body>
-<div class="phone">
-<div class="badge"><span></span>AO VIVO BLUMENAU SC</div>
-<h1>WEB RADIO MANO SHOW</h1>
-<div class="cover"><img src="logo.png"></div>
-<div class="now"><div class="ico">🎵</div><div><small>Tocando agora</small><b id="track">Carregando...</b></div></div>
-<div class="controls"><button class="play" id="playBtn">▶ TOCAR</button><button class="rec" id="recBtn"><div class="dot"><i></i></div><small>REC</small></button></div>
-<div class="dock">
-<a href="https://wa.me/5547999999999" target="_blank"><div class="c">W</div><small>WhatsApp</small></a>
-<a href="#"><div class="c">f</div><small>Facebook</small></a>
-<a href="#"><div class="c">I</div><small>Instagram</small></a>
-<a href="#"><div class="c">T</div><small>TikTok</small></a>
-<a href="#"><div class="c">Y</div><small>YouTube</small></a>
-<a href="#"><div class="c">☰</div><small>Menu</small></a>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<div class="sidebar" id="sidebar">
+<h3>MANO SHOW</h3>
+<a href="mailto:manoshowwebradio@gmail.com"><i class="fa-solid fa-envelope"></i> manoshowwebradio@gmail.com</a>
+<a href="https://wa.me/554791452690" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+<a href="https://www.facebook.com/share/1DSuwkVnxz/" target="_blank"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+<a href="https://www.instagram.com/manoshow.oficial" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+<a href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+<a href="https://youtube.com/@webradiomanoshow" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>
+</div>
+<div class="header">
+<button class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+<img src="https://i.imgur.com/8Km9tLL.png" class="logo" alt="Mano Show">
+<h1>MANO <span>SHOW</span></h1>
+<div class="slogan">Sua Web Rádio 24h no ar</div>
+<div class="player-box">
+<div class="now">♪ TOCANDO AGORA</div>
+<div id="musicTitle">Mano Show Web Rádio - Ao Vivo</div>
+<button class="play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
+<audio id="radio" src="https://stream.zeno.fm/t8c42kmdn48uv"></audio>
+<div class="socials">
+<a href="https://wa.me/554791452690" target="_blank"><i class="fa-brands fa-whatsapp" style="color:#25D366"></i></a>
+<a href="https://www.facebook.com/share/1DSuwkVnxz/" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+<a href="https://www.instagram.com/manoshow.oficial" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+<a href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+<a href="https://youtube.com/@webradiomanoshow" target="_blank"><i class="fa-brands fa-youtube"></i></a>
 </div>
 </div>
-<audio id="audio" preload="none"></audio>
+</div>
 <script>
-const STREAM_URL="https://stream.zeno.fm/0ctt516rnhovv";
-const METADATA_URL="https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv";
-const audio=document.getElementById("audio"),playBtn=document.getElementById("playBtn"),trackEl=document.getElementById("track");
-let playing=false;audio.src=STREAM_URL;
-playBtn.onclick=async()=>{if(!playing){try{await audio.play();playing=true;playBtn.innerHTML="II PAUSAR"}catch{}}else{audio.pause();playing=false;playBtn.innerHTML="▶ TOCAR"}};
-try{const es=new EventSource(METADATA_URL);es.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(d.streamTitle)trackEl.textContent=d.streamTitle}catch{}};es.onerror=()=>{trackEl.textContent="Mano Web Rádio - Ao Vivo"}}catch{trackEl.textContent="Mano Web Rádio - Ao Vivo"}
+const radio=document.getElementById('radio'); const icon=document.getElementById('playIcon');
+function togglePlay(){ if(radio.paused){ radio.play(); icon.className='fa-solid fa-pause'; } else { radio.pause(); icon.className='fa-solid fa-play'; } }
+function toggleMenu(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
 </script>
 </body>
 </html>
