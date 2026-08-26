@@ -5,93 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Web Rádio Mano Show</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#000;color:#fff;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.header{padding:10px;display:flex;justify-content:space-between;align-items:center;background:#000}
-.header img{height:35px}
-.main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#222 0%,#000 100%);padding:20px;position:relative}
-.logo-central{width:220px;height:220px;border-radius:20px;object-fit:cover;box-shadow:0 0 30px rgba(255,0,0,0.5);margin-bottom:20px;background:#111}
-.live-badge{background:#ff0000;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:bold;position:absolute;top:20px;right:20px}
-.player-bar{background:#001a66;width:100%;padding:15px;display:flex;align-items:center;gap:15px;cursor:pointer}
-.player-bar img{width:50px;height:50px;border-radius:8px}
-.player-info{flex:1}
-.player-info b{font-size:14px;display:block}
-.player-info span{font-size:12px;color:#8ab4ff}
-.play-btn{width:45px;height:45px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#001a66;font-size:20px;border:none}
-.footer{background:#000;padding:10px 0;border-top:1px solid #222}
-.footer-icons{display:flex;justify-content:space-around;align-items:center}
-.footer-icons a{color:#fff;text-decoration:none;text-align:center;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.footer-icons .icon{width:28px;height:28px;background:#222;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
-.menu-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:100;flex-direction:column;padding:30px}
-.menu-overlay.active{display:flex}
-.menu-overlay a{color:#fff;text-decoration:none;padding:15px 0;border-bottom:1px solid #222;font-size:18px}
-.close-menu{position:absolute;top:15px;right:20px;font-size:30px;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0f0f;color:#fff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.card{background:#1a1a1a;border-radius:20px;padding:25px;max-width:400px;width:100%;text-align:center;border:1px solid #333}
+.logo{width:150px;height:150px;border-radius:50%;margin:0 auto 20px;background:#222;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden}
+.logo.playing{animation:spin 3s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+h1{font-size:24px;color:#00d4ff}
+.sub{color:#888;font-size:14px;margin-bottom:15px}
+.now{background:#222;border-radius:12px;padding:12px;margin:15px 0;min-height:55px}
+.now small{color:#00d4ff;font-size:11px;text-transform:uppercase}
+#track{font-size:16px;font-weight:bold;margin-top:4px}
+.play-btn{width:80px;height:80px;border-radius:50%;border:none;background:#00d4ff;color:#000;font-size:35px;cursor:pointer;margin:15px auto;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
-<div class="header">
-<img src="https://i.imgur.com/8Km9tLL.png" alt="Mano Show">
-<span style="font-size:12px">🔴 AO VIVO</span>
+<div class="card">
+<div class="logo" id="logo">🎧</div>
+<h1>MANO SHOW</h1>
+<p class="sub">Ao Vivo 24h ● AO VIVO</p>
+<div class="now">
+<small>🎵 Tocando agora</small>
+<div id="track">Carregando música...</div>
 </div>
-
-<div class="main" onclick="playRadio()">
-<div class="live-badge">🔴 AO VIVO</div>
-<img class="logo-central" src="https://i.imgur.com/8Km9tLL.png" alt="Logo">
-<h2>WEB RÁDIO MANO SHOW</h2>
-<p style="color:#aaa;font-size:13px">Clique para ouvir</p>
-<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
+<button class="play-btn" id="playBtn">▶</button>
+<audio id="audio"></audio>
 </div>
-
-<div class="player-bar" onclick="playRadio()">
-<img src="https://i.imgur.com/8Km9tLL.png" alt="capa">
-<div class="player-info">
-<b>Tocando agora - Mano Show</b>
-<span id="track-status">Clique para tocar</span>
-</div>
-<button class="play-btn" id="btnPlay">▶</button>
-</div>
-
-<div class="footer">
-<div class="footer-icons">
-<a href="https://wa.me/5547999999999" target="_blank"><div class="icon">💬</div>WhatsApp</a>
-<a href="https://facebook.com" target="_blank"><div class="icon">f</div>Facebook</a>
-<a href="https://instagram.com" target="_blank"><div class="icon">📷</div>Instagram</a>
-<a href="https://tiktok.com" target="_blank"><div class="icon">♪</div>TikTok</a>
-<a href="https://youtube.com" target="_blank"><div class="icon">▶</div>YouTube</a>
-<a href="javascript:void(0)" onclick="openMenu()"><div class="icon">☰</div>Menu</a>
-</div>
-</div>
-
-<div class="menu-overlay" id="menu">
-<span class="close-menu" onclick="closeMenu()">×</span>
-<h2 style="margin-bottom:20px">Menu</h2>
-<a href="javascript:void(0)" onclick="closeMenu()">🏠 Início</a>
-<a href="javascript:void(0)" onclick="avaliarApp()">⭐ Avaliar App</a>
-<a href="javascript:void(0)" onclick="compartilhar()">📲 Compartilhar App</a>
-<a href="javascript:void(0)">📻 Sobre a Rádio</a>
-<a href="javascript:void(0)">🔒 Política de Privacidade</a>
-</div>
-
 <script>
-let isPlaying=false;
-const audio=document.getElementById('radio');
-const btn=document.getElementById('btnPlay');
-const status=document.getElementById('track-status');
-function playRadio(){
- if(!isPlaying){audio.play();isPlaying=true;btn.innerHTML="⏸";status.innerHTML="Tocando - AO VIVO"}
- else{audio.pause();isPlaying=false;btn.innerHTML="▶";status.innerHTML="Pausado"}
+const STREAM_URL = "https://stream.zeno.fm/0ctt516rnhovv";
+const METADATA_URL = "https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv";
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const trackEl = document.getElementById('track');
+const logo = document.getElementById('logo');
+let isPlaying = false;
+audio.src = STREAM_URL;
+playBtn.onclick = () => {
+  if(!isPlaying){
+    audio.play().then(()=>{isPlaying=true;playBtn.textContent="⏸";logo.classList.add('playing');});
+  }else{audio.pause();isPlaying=false;playBtn.textContent="▶";logo.classList.remove('playing');}
+};
+function connectMetadata(){
+  const es = new EventSource(METADATA_URL);
+  es.onmessage = (event)=>{
+    try{
+      const data = JSON.parse(event.data);
+      if(data.streamTitle){trackEl.textContent=data.streamTitle;document.title=data.streamTitle+" - Mano Show";}
+    }catch(e){}
+  };
+  es.onerror = ()=>{es.close();setTimeout(connectMetadata,5000);};
 }
-function openMenu(){document.getElementById('menu').classList.add('active')}
-function closeMenu(){document.getElementById('menu').classList.remove('active')}
-function avaliarApp(){
- const playStoreLink=""; // AQUI VAI SEU LINK DA PLAY STORE DEPOIS
- if(playStoreLink===""){alert("⭐ Em breve na Play Store!\nNosso app está em aprovação.");compartilhar()}
- else{window.open(playStoreLink,'_blank')}
-}
-function compartilhar(){
- if(navigator.share){navigator.share({title:'Web Rádio Mano Show',url:window.location.href})}
- else{alert('Compartilhe: '+window.location.href)}
-}
+connectMetadata();
 </script>
 </body>
 </html>
