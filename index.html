@@ -6,51 +6,48 @@
 <title>WEB RADIO MANO SHOW</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#2a5bdc;color:#fff;text-align:center;padding:15px;min-height:100vh}
-h1{font-size:22px;font-weight:900;margin:10px 0}
-.capa{width:92%;max-width:390px;background:#000;border-radius:28px;padding:10px;margin:15px auto}
-.capa img{width:100%;border-radius:18px;display:block;min-height:380px;object-fit:cover}
-.tocando{background:#5a82e8;border-radius:30px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin:20px auto;max-width:400px;text-align:left}
-.controles{display:flex;align-items:center;justify-content:center;gap:18px;margin:25px 0}
-.btn-pausar{background:#2d7cf0;color:#fff;border:none;width:75%;max-width:340px;padding:22px;border-radius:35px;font-size:24px;font-weight:800;cursor:pointer}
-.btn-rec{width:76px;height:76px;background:#e30613;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.btn-rec div{width:22px;height:22px;background:#fff;border-radius:50%}
-.rodape{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;max-width:440px;margin:35px auto 0}
-.item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#fff;min-width:60px;cursor:pointer}
+body{background:#2a5bdc;color:#fff;text-align:center;padding:10px}
+.header{display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:20px;font-weight:900;flex:1}
+.btn-menu{background:rgba(0,0,0,.2);border:none;color:#fff;font-size:28px;width:42px;height:42px;border-radius:50%}
+.capa{width:92%;max-width:380px;background:#000;border-radius:28px;overflow:hidden;margin:12px auto}
+.capa img{width:100%;display:block;min-height:380px;object-fit:cover}
+.tocando{background:#5a82e8;border-radius:30px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin:18px auto;max-width:390px;text-align:left}
+.controles{display:flex;align-items:center;justify-content:center;gap:16px;margin:22px 0}
+.btn-pausar{background:#2d7cf0;color:#fff;border:none;width:72%;max-width:300px;padding:20px;border-radius:32px;font-size:22px;font-weight:800}
+.btn-rec{width:72px;height:72px;background:#e30613;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.botoes{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;max-width:420px;margin:28px auto 0}
+.item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#fff;min-width:62px}
 .bola{width:62px;height:62px;background:#2d7cf0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:bold}
-.nome{font-size:11px;margin-top:6px;font-weight:600}
+.nome{font-size:12px;margin-top:6px;font-weight:600}
 </style>
 </head>
 <body>
-<h1>WEB RADIO MANO SHOW</h1>
-<div class="capa"><img id="capaImg" src="https://i.imgur.com/8Km9tLL.jpg" alt="Capa"></div>
-<div class="tocando"><div style="width:52px;height:52px;background:#8aa4ef;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px">♫</div><div><small>Tocando agora</small><br><b id="titulo">Carregando...</b></div></div>
-<div class="controles"><button class="btn-pausar" id="btnPlay" onclick="toggle()">|| PAUSAR</button><div class="btn-rec"><div></div></div></div>
+<div class="header"><h1>WEB RADIO MANO SHOW</h1><button class="btn-menu" onclick="document.getElementById('menuEmail').style.display='flex'">☰</button></div>
+<div class="capa"><img id="capaImg" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600"></div>
+<div class="tocando"><div style="width:54px;height:54px;background:#7a9bf0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px">♫</div><div><small>Tocando agora</small><br><b id="titulo">Carregando...</b></div></div>
+<div class="controles"><button class="btn-pausar" id="btnPlay" onclick="togglePlay()">|| PAUSAR</button><div class="btn-rec"><div style="width:22px;height:22px;background:#fff;border-radius:50%"></div></div></div>
 <audio id="radio" src="https://stream.zeno.fm/0r0xa7x8f2zuv" autoplay></audio>
-<div class="rodape">
+<div class="botoes">
 <a class="item" href="https://wa.me/554791452690" target="_blank"><div class="bola">W</div><span class="nome">Whats</span></a>
 <a class="item" href="https://www.facebook.com/share/188ZhfgmJh/" target="_blank"><div class="bola">f</div><span class="nome">Face</span></a>
 <a class="item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="bola">◎</div><span class="nome">Insta</span></a>
 <a class="item" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="bola">♪</div><span class="nome">TikTok</span></a>
 <a class="item" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="bola">▶</div><span class="nome">YouTube</span></a>
-<div class="item" onclick="document.getElementById('menuEmail').style.display='flex'"><div class="bola">☰</div><span class="nome">Menu</span></div>
 </div>
-<div id="menuEmail" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.96);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px"><button onclick="document.getElementById('menuEmail').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;color:#fff;font-size:38px">X</button><p style="color:#888;letter-spacing:5px">EMAIL</p><p style="background:#2d7cf0;padding:18px 25px;border-radius:14px;font-size:20px;margin-top:15px;word-break:break-all">manoshowwebradio@gmail.com</p><a href="mailto:manoshowwebradio@gmail.com" style="background:#e30613;color:#fff;padding:14px 28px;border-radius:30px;text-decoration:none;font-weight:bold;margin-top:20px">ENVIAR EMAIL</a></div>
+<div id="menuEmail" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.96);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px"><button onclick="this.parentElement.style.display='none'" style="position:absolute;top:18px;right:18px;background:none;border:none;color:#fff;font-size:36px">✕</button><p style="color:#888;letter-spacing:6px">EMAIL</p><p style="background:#2d7cf0;padding:18px 22px;border-radius:14px;font-size:18px;margin-top:16px">manoshowwebradio@gmail.com</p><a href="mailto:manoshowwebradio@gmail.com" style="background:#e30613;color:#fff;padding:14px 28px;border-radius:30px;text-decoration:none;font-weight:bold;margin-top:22px">ENVIAR EMAIL</a></div>
 <script>
 const radio=document.getElementById('radio');const btn=document.getElementById('btnPlay');
-function toggle(){if(radio.paused){radio.play();btn.innerText='|| PAUSAR'}else{radio.pause();btn.innerText='▶ OUVIR'}}
+function togglePlay(){if(radio.paused){radio.play();btn.innerText='|| PAUSAR'}else{radio.pause();btn.innerText='▶ OUVIR'}}
 async function atualizar(){
  try{
-  const url = encodeURIComponent('https://stream.zeno.fm/0r0xa7x8f2zuv');
-  const r = await fetch('https://api.twj.es/?url='+url);
-  const j = await r.json();
-  if(j.songtitle){ document.getElementById('titulo').innerText = j.songtitle; }
-  if(j.albumArt){ document.getElementById('capaImg').src = j.albumArt; }
-  else if(j.artwork){ document.getElementById('capaImg').src = j.artwork; }
- }catch(e){ document.getElementById('titulo').innerText = 'Web Rádio Mano Show - Ao Vivo'; }
+  const r=await fetch('https://api.twj.es/?url='+encodeURIComponent('https://stream.zeno.fm/0r0xa7x8f2zuv')+'&t='+Date.now());
+  const j=await r.json();
+  if(j.songtitle)document.getElementById('titulo').innerText=j.songtitle;
+  let capa=j.albumArt||j.artwork||j.image; if(capa)document.getElementById('capaImg').src=capa;
+ }catch(e){}
 }
-setInterval(atualizar,8000);
-atualizar();
+setInterval(atualizar,5000);atualizar();
 </script>
 </body>
 </html>
