@@ -1,2 +1,66 @@
-<div class="nav"><a href="https://wa.me/5547991452690" target="_blank"><div class="ico">W</div>WhatsApp</a><a href="https://www.facebook.com/share/188ZhfgmJh/" target="_blank"><div class="ico">f</div>Facebook</a><a href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="ico">O</div>Instagram</a><a href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="ico">♪</div>TikTok</a><a href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="ico">▶</div>YouTube</a><a href="#" id="openMenu"><div class="ico">☰</div>Menu</a></div><div id="overlay"></div><div id="menu"><div class="menuTop">MENU <span id="closeMenu" style="font-size:22px">✕</span></div><a class="menuItem" href="mailto:manoshowwebradio@gmail.com"><div>✉️</div><div><b>Email</b><br><small>manoshowwebradio@gmail.com</small></div></a><a class="menuItem" href="https://wa.me/5547991452690"><div>💬</div><div><b>WhatsApp</b><br><small>47 99145-2690</small></div></a><a class="menuItem" href="https://wa.me/5547991585806"><div>💬</div><div><b>WhatsApp 2</b><br><small>47 99158-5806</small></div></a><div style="margin-top:auto;padding:16px;text-align:center;opacity:.7;font-size:11px">WEB RADIO MANO SHOW<br>Blumenau - SC</div></div><audio id="audio" src="https://stream-175.zeno.fm/0ctt516rnhovv" autoplay></audio><script>const audio=document.getElementById('audio');const btnPlay=document.getElementById('btnPlay');const track=document.getElementById('track');let tocando=true,ultimo="";btnPlay.onclick=()=>{if(tocando){audio.pause();btnPlay.innerHTML="▶ TOCAR";tocando=false}else{audio.play();btnPlay.innerHTML="II PAUSAR";tocando=true}};const menu=document.getElementById('menu');const overlay=document.getElementById('overlay');document.getElementById('openMenu').onclick=(e)=>{e.preventDefault();menu.classList.add('open');overlay.classList.add('show')};document.getElementById('closeMenu').onclick=()=>{menu.classList.remove('open');overlay.classList.remove('show')};overlay.onclick=()=>{menu.classList.remove('open');overlay.classList.remove('show')};async function pegaZeno(){try{const r=await fetch('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv?t='+Date.now());const t=await r.text();const m=t.match(/streamTitle='([^']*)'/);if(m&&m[1]&&m[1]!==ultimo&&m[1].trim()!=""){ultimo=m[1];track.innerText=ultimo;}}catch(e){}}setInterval(pegaZeno,3000);pegaZeno();</script></body></html>
-><a href="https://www.facebook.com/share/188ZhfgmJh/" target="_blank"><div class="ico">f</div>Facebook</a><a href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="ico">O</div>Instagram</a><a href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="ico">♪</div>TikTok</a><a href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="ico">▶</div>YouTube</a><a href="#" id="openMenu"><div class="ico">☰</div>Menu</a></div><div id="overlay"></div><div id="menu"><div class="menuTop">MENU <span id="closeMenu" style="font-size:22px">✕</span></div><a class="menuItem" href="mailto:manoshowwebradio@gmail.com"><div>✉️</div><div><b>Email</b><br><small>manoshowwebradio@gmail.com</small></div></a><a class="menuItem" href="https://wa.me/5547991452690"><div>💬</div><div><b>WhatsApp</b><br><small>47 99145-2690</small></div></a><a class="menuItem" href="https://wa.me/5547991585806"><div>💬</div><div><b>WhatsApp 2</b><br><small>47 99158-5806</small></div></a><div style="margin-top:auto;padding:16px;text-align:center;opacity:.7;font-size:11px">WEB RADIO MANO SHOW<br>Blumenau - SC</div></div><audio id="audio" src="https://stream-175.zeno.fm/0ctt516rnhovv" autoplay></audio><script>const audio=document.getElementById('audio');const btnPlay=document.getElementById('btnPlay');const track=document.getElementById('track');let tocando=true,ultimo="";btnPlay.onclick=()=>{if(tocando){audio.pause();btnPlay.innerHTML="▶ TOCAR";tocando=false}else{audio.play();btnPlay.innerHTML="II PAUSAR";tocando=true}};const menu=document.getElementById('menu');const overlay=document.getElementById('overlay');document.getElementById('openMenu').onclick=(e)=>{e.preventDefault();menu.classList.add('open');overlay.classList.add('show')};document.getElementById('closeMenu').onclick=()=>{menu.classList.remove('open');overlay.classList.remove('show')};overlay.onclick=()=>{menu.classList.remove('open');overlay.classList.remove('show')};async function pegaZeno(){try{const r=await fetch('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv?t='+Date.now());const t=await r.text();const m=t.match(/streamTitle='([^']*)'/);if(m&&m[1]&&m[1]!==ultimo&&m[1].trim()!=""){ultimo=m[1];track.innerText=ultimo;}}catch(e){}}setInterval(pegaZeno,3000);pegaZeno();</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANO Web Rádio - Ao Vivo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:Arial,sans-serif;text-align:center;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.live{color:#ff0000;font-weight:bold;letter-spacing:2px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0.5}}
+h1{font-size:48px;margin:15px 0;color:#ffcc00;text-shadow:2px 2px 4px #000}
+.player-box{background:#1a1a1a;padding:30px;border-radius:20px;margin:20px 0;border:2px solid #ffcc00;width:100%;max-width:400px}
+#playBtn{background:#ffcc00;color:#000;border:none;padding:20px 50px;font-size:22px;font-weight:bold;border-radius:50px;cursor:pointer;width:100%}
+#playBtn:hover{transform:scale(1.05);background:#fff}
+#status{margin-top:15px;font-size:16px;color:#aaa}
+.socials{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.socials a{background:#222;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:bold}
+.socials a:hover{background:#ffcc00;color:#000}
+.menu-btn{position:fixed;top:15px;right:15px;background:#ffcc00;color:#000;padding:10px 15px;border-radius:8px;font-weight:bold;cursor:pointer;z-index:1000}
+.side-menu{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#111;padding:20px;transition:0.3s;z-index:999;border-left:2px solid #ffcc00;text-align:left;overflow-y:auto}
+.side-menu.open{right:0}
+.side-menu a{display:block;color:#fff;text-decoration:none;padding:10px 0;border-bottom:1px solid #333}
+.side-menu .close{text-align:right;font-size:24px;cursor:pointer;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="menu-btn" onclick="toggleMenu()">☰ MENU</div>
+<div class="side-menu" id="sideMenu">
+<div class="close" onclick="toggleMenu()">X</div>
+<h3 style="color:#ffcc00">MENU</h3>
+<a href="mailto:manoshowwebradio@gmail.com">📧 Email</a>
+<a href="https://wa.me/554791452690" target="_blank">📱 WhatsApp</a>
+<a href="#">📘 Facebook</a>
+<a href="#">📸 Instagram</a>
+<a href="#">🎵 TikTok</a>
+<a href="#">▶️ YouTube</a>
+</div>
+<div class="live">🔴 AO VIVO DIRETO DE BLUMENAU</div>
+<h1>MANO SHOW</h1>
+<p style="color:#aaa">Toque para ouvir</p>
+<div class="player-box">
+<button id="playBtn" onclick="togglePlay()">▶️ TOCAR</button>
+<div id="status">Rádio parada</div>
+<audio id="radio" preload="none">
+<source src="https://stream.zeno.fm/urlp8wipknauv" type="audio/mpeg">
+</audio>
+</div>
+<div class="socials">
+<a href="https://wa.me/554791452690" target="_blank">WHATSAPP</a>
+<a href="#">FACEBOOK</a>
+<a href="#">INSTAGRAM</a>
+</div>
+<script>
+let isPlaying=false;
+const audio=document.getElementById('radio');
+const btn=document.getElementById('playBtn');
+const status=document.getElementById('status');
+function togglePlay(){
+ if(isPlaying){audio.pause();btn.innerHTML='▶️ TOCAR';status.innerHTML='Rádio parada';isPlaying=false;}
+ else{audio.play().then(()=>{btn.innerHTML='⏸️ PAUSAR';status.innerHTML='Tocando ao vivo...';isPlaying=true;}).catch(e=>{status.innerHTML='Clique novamente';});}
+}
+function toggleMenu(){document.getElementById('sideMenu').classList.toggle('open');}
+</script>
+</body>
+</html>
