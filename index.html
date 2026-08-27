@@ -28,10 +28,10 @@ audio{display:none}
 
 <div class="tocando">
 <div style="font-size:26px">🎵</div>
-<div><div style="font-weight:400;font-size:12px">Tocando agora</div><span id="nomeMusica">Carregando rádio...</span></div>
+<div><div style="font-weight:400;font-size:12px">Tocando agora</div><span id="nomeMusica">Mano Show Web Rádio - Ao Vivo</span></div>
 </div>
 
-<audio id="player" preload="none"><source src="https://stream.zeno.fm/0ctt516rnhovv" type="audio/mpeg"></audio>
+<audio id="player" preload="none" crossorigin="anonymous"><source src="https://stream.zeno.fm/0ctt516rnhovv" type="audio/mpeg"></audio>
 
 <div class="controles">
 <button class="btn-ouvir" id="btnOuvir">▶️ OUVIR</button>
@@ -62,22 +62,23 @@ btnOuvir.onclick=async()=>{
  else{player.pause();btnOuvir.innerHTML='▶️ OUVIR';tocando=false;}
 };
 
-// ATUALIZA NOME E CAPA DA ZENO
+// NOME E CAPA - AGORA FUNCIONA NO CELULAR
 async function pegaMusica(){
  try{
-  const r=await fetch('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
-  const t=await r.text();
+  const proxy='https://api.allorigins.win/get?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
+  const r=await fetch(proxy);
+  const d=await r.json();
+  const t=d.contents;
   const m=t.match(/"title":"(.*?)"/);
-  if(m && m[1]){nomeMusicaEl.innerText=m[1];
-   try{
-    const it=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(m[1])+'&limit=1');
-    const j=await it.json();
-    if(j.results[0])capaEl.src=j.results[0].artworkUrl100.replace('100x100','600x600');
-   }catch(e){}
+  if(m && m[1] && m[1].length>2){
+   if(nomeMusicaEl.innerText!==m[1]) nomeMusicaEl.innerText=m[1];
+   const it=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(m[1])+'&limit=1');
+   const j=await it.json();
+   if(j.results && j.results[0]) capaEl.src=j.results[0].artworkUrl100.replace('100x100','600x600');
   }
- }catch(e){nomeMusicaEl.innerText='Mano Show Web Rádio - Ao Vivo';}
+ }catch(e){}
 }
-setInterval(pegaMusica,15000);pegaMusica();
+setInterval(pegaMusica,8000); pegaMusica();
 
 // GRAVADOR QUE SALVA COMO MÚSICA
 let gravando=false,chunks=[],control;
