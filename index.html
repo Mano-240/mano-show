@@ -7,12 +7,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px 12px 110px 12px}
-.capa{width:100%;max-width:380px;border-radius:24px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.4)}
+.capa{width:100%;max-width:380px;border-radius:24px;overflow:hidden}
 .capa img{width:100%;display:block}
 .tocando{background:#d0e3ff;width:100%;max-width:380px;margin-top:16px;border-radius:50px;padding:8px 16px;display:flex;align-items:center;gap:12px;color:#0d2a5e}
-.tocando .ico{width:48px;height:48px;background:#a9c9ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tocando .ico{width:48px;height:48px;background:#a9c9ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
 .tocando b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;font-weight:900}
-.tocando span{font-size:13px;opacity:.7;display:block}
+.tocando span{font-size:13px;opacity:.7}
 .play-line{width:100%;max-width:380px;margin-top:22px;display:flex;gap:14px;align-items:center}
 #btnPlay{flex:1;background:#0e6eff;border:0;color:#fff;font-size:30px;font-weight:900;padding:22px 10px;border-radius:22px;cursor:pointer}
 #btnRec{width:88px;height:88px;background:#ff1313;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
@@ -23,12 +23,12 @@ body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 </style>
 </head>
 <body>
-<div class="capa"><img id="imgCapa" src="https://i.imgur.com/U6a6a8a.png" alt="MANO Web Rádio"></div>
-<div class="tocando"><div class="ico">🎵</div><div style="overflow:hidden;flex:1"><span>Tocando agora</span><b id="musica">Diego e Arnaldo - Diego e Arnaldo ...</b></div></div>
+<div class="capa"><img src="logo.png"></div>
+<div class="tocando"><div class="ico">🎵</div><div style="overflow:hidden;flex:1"><span>Tocando agora</span><b id="musica">Carregando...</b></div></div>
 <div class="play-line"><button id="btnPlay">II PAUSAR</button><div id="btnRec"><span></span></div></div>
 <audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
 <div class="bottom">
-<a class="b-item" href="https://wa.me/554791452690?text=Oi%20Mano%20Show!" target="_blank"><div class="cir">W</div>WhatsApp</a>
+<a class="b-item" href="https://wa.me/554791452690" target="_blank"><div class="cir">W</div>WhatsApp</a>
 <a class="b-item" href="https://www.facebook.com/share/194uCTvuQC/" target="_blank"><div class="cir">f</div>Facebook</a>
 <a class="b-item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="cir">◎</div>Instagram</a>
 <a class="b-item" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="cir">♪</div>TikTok</a>
@@ -36,8 +36,8 @@ body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 <a class="b-item" href="#"><div class="cir">☰</div>Menu</a>
 </div>
 <script>
-const radio=document.getElementById('radio'), btnPlay=document.getElementById('btnPlay'), musica=document.getElementById('musica');
-let tocando=true; radio.play().catch(()=>{tocando=false;btnPlay.textContent='▶ OUVIR'});
+const radio=document.getElementById('radio'),btnPlay=document.getElementById('btnPlay'),musica=document.getElementById('musica');
+let tocando=true;radio.play().catch(()=>{tocando=false;btnPlay.textContent='▶ OUVIR'});
 btnPlay.onclick=async()=>{if(tocando){radio.pause();btnPlay.textContent='▶ OUVIR';tocando=false}else{await radio.play();btnPlay.textContent='II PAUSAR';tocando=true}};
 let rec,chunks=[],grav=false;const btnRec=document.getElementById('btnRec');
 btnRec.onclick=async()=>{if(!grav){try{let s=radio.captureStream?radio.captureStream():radio.mozCaptureStream();rec=new MediaRecorder(s);chunks=[];rec.ondataavailable=e=>chunks.push(e.data);rec.onstop=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks));a.download='mano-show.webm';a.click()};rec.start();grav=true;btnRec.style.background='#900'}catch(e){alert('Use Chrome')}}else{rec.stop();grav=false;btnRec.style.background='#ff1313'}};
