@@ -6,97 +6,83 @@
 <title>MANO Web Rádio</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#1570ff;font-family:Arial, sans-serif;min-height:100vh;padding-bottom:120px}
+body{background:#1570ff;font-family:Arial,sans-serif;min-height:100vh;padding-bottom:140px}
 .top-box{margin:12px;background:#000;border-radius:28px;overflow:hidden;position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-.top-box img.logo{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
-.top-box img.capa{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;display:none;z-index:2}
-.top-box img.capa.ativa{display:block}
-.now{margin:14px 12px;background:#d6e6ff;border-radius:100px;display:flex;align-items:center;gap:12px;padding:10px 18px}
+.top-box img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+#capa{display:none;z-index:5}
+#capa.on{display:block}
+.now{margin:14px 12px;background:#d6e6ff;border-radius:100px;display:flex;align-items:center;gap:12px;padding:12px 18px}
 .now .ico{width:56px;height:56px;background:#b8cfff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
 .now small{color:#4a5a7a;font-size:14px;display:block}
 .now b{color:#0a2152;font-size:16px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
-.player{display:flex;align-items:center;justify-content:space-between;padding:20px 28px}
-.btn-ouvir{display:flex;align-items:center;gap:12px;background:none;border:0;color:#fff;font-size:34px;font-weight:900;letter-spacing:1px}
-.btn-ouvir span{width:58px;height:62px;background:linear-gradient(#7ec8ff,#2a90ff);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.btn-rec{width:92px;height:92px;background:#ff0000;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.3)}
-.btn-rec::after{content:'';width:28px;height:28px;background:#fff;border-radius:50%;display:block}
-.btn-rec.tocando::after{width:22px;height:22px;border-radius:4px}
-
-/* BOTOES GRANDES DE VOLTA */
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#1570ff;display:flex;justify-content:space-around;padding:10px 2px 22px 2px;z-index:99}
-.b-item{display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;color:#fff;font-size:13px;font-weight:800;flex:1;background:none;border:0}
-.b-item .cir{width:62px;height:62px;background:#0d4fbe;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 3px 10px rgba(0,0,0,.35);font-weight:900}
+.player{display:flex;align-items:center;justify-content:space-between;padding:18px 22px}
+.btn-ouvir{display:flex;align-items:center;gap:12px;background:none;border:0;color:#fff;font-size:38px;font-weight:900}
+.btn-rec{width:96px;height:96px;background:#ff0000;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center}
+.btn-rec::after{content:'';width:30px;height:30px;background:#fff;border-radius:50%}
+.btn-rec.play::after{width:24px;height:24px;border-radius:4px}
+/* BOTOES GRANDES IGUAL SEU PRINT */
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#1570ff;display:flex;justify-content:space-between;padding:0 0 8px 0;z-index:99}
+.b-item{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:#fff;font-size:11px;font-weight:800;flex:1;background:none;border:0;padding:6px 2px}
+.b-item .cir{width:76px;height:76px;background:#0d4fbe;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900}
 </style>
 </head>
 <body>
 
 <div class="top-box">
-  <img class="logo" src="logo.png" alt="MANO Web Rádio">
-  <img id="capaImg" class="capa" src="" alt="Capa">
+  <img src="logo.png" alt="MANO SHOW">
+  <img id="capa" src="" alt="capa">
 </div>
 
 <div class="now">
   <div class="ico">🎵</div>
   <div>
     <small>Tocando agora</small>
-    <b id="musicaTxt">MANO Web Rádio - Ao Vivo</b>
+    <b id="txt">MANO Web Rádio - Ao Vivo</b>
   </div>
 </div>
 
 <div class="player">
-  <button class="btn-ouvir" onclick="togglePlay()"><span>▶</span> OUVIR</button>
-  <button class="btn-rec" id="btnRec" onclick="togglePlay()"></button>
+  <button class="btn-ouvir" onclick="toggle()"><span style="font-size:52px">▶️</span> OUVIR</button>
+  <button class="btn-rec" id="rec" onclick="toggle()"></button>
 </div>
 
-<audio id="audio" src="https://stream.zeno.fm/8zzuym8e4tzuv" preload="none"></audio>
+<audio id="audio" src="https://stream.zeno.fm/8zzuym8e4tzuv"></audio>
 
 <div class="bottom">
-  <a class="b-item" href="https://wa.me/5547999999999" target="_blank"><div class="cir">W</div>Whats</a>
-  <a class="b-item" href="https://facebook.com" target="_blank"><div class="cir">f</div>Face</a>
-  <a class="b-item" href="https://instagram.com" target="_blank"><div class="cir">◉</div>Insta</a>
+  <a class="b-item" href="https://wa.me/5547999999999" target="_blank"><div class="cir">W</div>WhatsApp</a>
+  <a class="b-item" href="https://facebook.com" target="_blank"><div class="cir">f</div>Facebook</a>
+  <a class="b-item" href="https://instagram.com" target="_blank"><div class="cir">◎</div>Instagram</a>
   <a class="b-item" href="https://tiktok.com" target="_blank"><div class="cir">♪</div>TikTok</a>
-  <a class="b-item" href="https://youtube.com" target="_blank"><div class="cir">▶</div>You</a>
+  <a class="b-item" href="https://youtube.com" target="_blank"><div class="cir">▶️</div>YouTube</a>
   <button class="b-item" onclick="alert('Menu em breve')"><div class="cir">☰</div>Menu</button>
 </div>
 
 <script>
-const audio = document.getElementById('audio');
-const btnRec = document.getElementById('btnRec');
-const capaImg = document.getElementById('capaImg');
-const musicaTxt = document.getElementById('musicaTxt');
-
-function togglePlay(){
-  if(audio.paused){ audio.play(); btnRec.classList.add('tocando'); }
-  else{ audio.pause(); btnRec.classList.remove('tocando'); }
+const audio=document.getElementById('audio');
+const rec=document.getElementById('rec');
+const capa=document.getElementById('capa');
+const txt=document.getElementById('txt');
+function toggle(){
+ if(audio.paused){audio.play();rec.classList.add('play')}
+ else{audio.pause();rec.classList.remove('play')}
 }
-
-// BUSCA CAPA SÓ DA ZENO - SEM SPOTIFY, SEM ITUNES
-async function buscaCapa(){
-  try{
-    const r = await fetch('https://api.zeno.fm/mounts/metadata/subscribe/8zzuym8e4tzuv');
-    // fallback simples se a API acima falhar, tenta outra
-  }catch(e){}
-
-  try{
-    const res = await fetch('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/8zzuym8e4tzuv');
-    const data = await res.json();
-    const titulo = data.title || data.artist + ' - ' + data.title || 'Ao Vivo';
-    musicaTxt.innerText = titulo;
-    
-    // SE VIER CAPA DA ZENO MOSTRA, SE NÃO MOSTRA LOGO.PNG
-    if(data.coverart || data.image || data.artwork){
-      capaImg.src = data.coverart || data.image || data.artwork;
-      capaImg.classList.add('ativa');
-    } else {
-      capaImg.classList.remove('ativa');
-    }
-  }catch(e){
-    // sem capa mantém logo.png
-    capaImg.classList.remove('ativa');
+async function busca(){
+ try{
+  const r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/8zzuym8e4tzuv');
+  const j=await r.json();
+  if(j.title) txt.innerText=j.title;
+  if(j.coverart){
+   capa.src=j.coverart;
+   capa.classList.add('on');
+  }else{
+   capa.classList.remove('on');
   }
+ }catch(e){
+  capa.classList.remove('on');
+ }
 }
-setInterval(buscaCapa, 10000);
-buscaCapa();
+setInterval(busca,8000);
+busca();
 </script>
 </body>
 </html>
