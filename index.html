@@ -3,95 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mano Show</title>
+<title>MANO Web Rádio MANO Show</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f0f0f;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.card{background:#1c1c1c;padding:25px;border-radius:25px;max-width:360px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.6)}
-#capaImg{width:100%;aspect-ratio:1/1;border-radius:20px;object-fit:cover;background:#222;display:block}
-#tit{margin:18px 0 15px 0;font-size:19px;font-weight:bold;line-height:1.3;min-height:48px;text-align:center}
-.controles{display:flex;gap:10px;justify-content:center}
-button{flex:1;padding:14px;border-radius:30px;border:none;font-weight:bold;font-size:15px;cursor:pointer}
-#playBtn{background:#ffcc00;color:#000}
-#recBtn{background:#222;color:#fff;border:1px solid #333}
-#recBtn.gravando{background:#ff2d2d;color:#fff;animation:piscar 1s infinite}
-@keyframes piscar{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-.logo-topo{font-size:13px;opacity:.6;margin-bottom:12px;letter-spacing:2px;text-align:center}
+body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px 12px 110px 12px}
+.capa{width:100%;max-width:380px;border-radius:24px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.4)}
+.capa img{width:100%;display:block}
+.tocando{background:#d0e3ff;width:100%;max-width:380px;margin-top:16px;border-radius:50px;padding:8px 16px;display:flex;align-items:center;gap:12px;color:#0d2a5e}
+.tocando .ico{width:48px;height:48px;background:#a9c9ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.tocando b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;font-weight:900}
+.tocando span{font-size:13px;opacity:.7;display:block}
+.play-line{width:100%;max-width:380px;margin-top:22px;display:flex;gap:14px;align-items:center}
+#btnPlay{flex:1;background:#0e6eff;border:0;color:#fff;font-size:30px;font-weight:900;padding:22px 10px;border-radius:22px;cursor:pointer}
+#btnRec{width:88px;height:88px;background:#ff1313;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+#btnRec span{width:26px;height:26px;background:#fff;border-radius:50%;display:block}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#1570ff;display:flex;justify-content:space-around;padding:10px 2px 12px 2px}
+.b-item{display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;color:#fff;font-size:11px;font-weight:700;flex:1}
+.b-item .cir{width:58px;height:58px;background:#0d5ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
 </style>
 </head>
 <body>
-
-<div class="card">
-<div class="logo-topo">MANO SHOW</div>
-<img id="capaImg" src="https://i.imgur.com/8QJ4sQc.png" alt="Capa">
-<div id="tit">Carregando...</div>
-<audio id="rd" src="https://stream.zeno.fm/0ctt516rnhovv" preload="none"></audio>
-<div class="controles">
-<button id="playBtn">▶ OUVIR</button>
-<button id="recBtn">● GRAVAR</button>
+<div class="capa"><img id="imgCapa" src="https://i.imgur.com/U6a6a8a.png" alt="MANO Web Rádio"></div>
+<div class="tocando"><div class="ico">🎵</div><div style="overflow:hidden;flex:1"><span>Tocando agora</span><b id="musica">Diego e Arnaldo - Diego e Arnaldo ...</b></div></div>
+<div class="play-line"><button id="btnPlay">II PAUSAR</button><div id="btnRec"><span></span></div></div>
+<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
+<div class="bottom">
+<a class="b-item" href="https://wa.me/554791452690?text=Oi%20Mano%20Show!" target="_blank"><div class="cir">W</div>WhatsApp</a>
+<a class="b-item" href="https://www.facebook.com/share/194uCTvuQC/" target="_blank"><div class="cir">f</div>Facebook</a>
+<a class="b-item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="cir">◎</div>Instagram</a>
+<a class="b-item" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="cir">♪</div>TikTok</a>
+<a class="b-item" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="cir">▶</div>YouTube</a>
+<a class="b-item" href="#"><div class="cir">☰</div>Menu</a>
 </div>
-</div>
-
 <script>
-const STREAM_ID="0ctt516rnhovv";
-const rd=document.getElementById('rd');
-const bt=document.getElementById('playBtn');
-const tt=document.getElementById('tit');
-const cp=document.getElementById('capaImg');
-const recBtn=document.getElementById('recBtn');
-let tocando=false;
-
-bt.onclick=async()=>{
- try{
-  if(!tocando){await rd.play();bt.textContent='II PAUSAR';tocando=true}
-  else{rd.pause();bt.textContent='▶ OUVIR';tocando=false}
- }catch(e){}
-};
-
-let mediaRecorder=null,chunks=[],gravando=false;
-recBtn.onclick=async()=>{
- if(!gravando){
-  if(!tocando){alert('Dê PLAY antes');return;}
-  try{
-   let stream=rd.captureStream?rd.captureStream():rd.mozCaptureStream();
-   mediaRecorder=new MediaRecorder(stream);chunks=[];
-   mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
-   mediaRecorder.onstop=()=>{
-    let blob=new Blob(chunks,{type:'audio/webm'});
-    let url=URL.createObjectURL(blob);
-    let a=document.createElement('a');a.href=url;a.download='mano-show-'+Date.now()+'.webm';a.click();
-   };
-   mediaRecorder.start();gravando=true;recBtn.textContent='■ PARAR';recBtn.classList.add('gravando');
-  }catch(err){alert('Use Chrome para gravar');}
- }else{
-  if(mediaRecorder)mediaRecorder.stop();
-  gravando=false;recBtn.textContent='● GRAVAR';recBtn.classList.remove('gravando');
- }
-};
-
-async function buscaCapaAutomatica(nome){
- try{
-  let r=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(nome)+'&media=music&limit=1');
-  let j=await r.json();
-  if(j.results&&j.results[0])return j.results[0].artworkUrl100.replace('100x100','600x600');
- }catch(e){}
- return null;
-}
-
-async function atualiza(){
- try{
-  let r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/'+STREAM_ID+'?t='+Date.now());
-  let j=await r.json();
-  if(j.title){
-    tt.textContent=j.title;
-    let img=j.image||j.artwork||j.cover;
-    if(img){cp.src=img;}
-    else{let capaAuto=await buscaCapaAutomatica(j.title);if(capaAuto)cp.src=capaAuto;}
-  }
- }catch(e){}
-}
-atualiza();
-setInterval(atualiza,7000);
+const radio=document.getElementById('radio'), btnPlay=document.getElementById('btnPlay'), musica=document.getElementById('musica');
+let tocando=true; radio.play().catch(()=>{tocando=false;btnPlay.textContent='▶ OUVIR'});
+btnPlay.onclick=async()=>{if(tocando){radio.pause();btnPlay.textContent='▶ OUVIR';tocando=false}else{await radio.play();btnPlay.textContent='II PAUSAR';tocando=true}};
+let rec,chunks=[],grav=false;const btnRec=document.getElementById('btnRec');
+btnRec.onclick=async()=>{if(!grav){try{let s=radio.captureStream?radio.captureStream():radio.mozCaptureStream();rec=new MediaRecorder(s);chunks=[];rec.ondataavailable=e=>chunks.push(e.data);rec.onstop=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks));a.download='mano-show.webm';a.click()};rec.start();grav=true;btnRec.style.background='#900'}catch(e){alert('Use Chrome')}}else{rec.stop();grav=false;btnRec.style.background='#ff1313'}};
+async function pegaMusica(){try{let r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/0ctt516rnhovv?t='+Date.now());let j=await r.json();if(j.title)musica.textContent=j.title}catch(e){}}
+pegaMusica();setInterval(pegaMusica,8000);
 </script>
 </body>
 </html>
