@@ -46,29 +46,41 @@ async function gravar(){
         ctx=new AudioContext();
         src=ctx.createMediaElementSource(aud);
         dst=ctx.createMediaStreamDestination();
-        ganho=ctx.createGain();
-        ganho.gain.value=1.5;
-        src.connect(ganho);
-        ganho.connect(ctx.destination);
-        ganho.connect(dst);
+        ganho=ctx.createGain();ganho.gain.value=1.5;
+        src.connect(ganho);ganho.connect(ctx.destination);ganho.connect(dst);
       }
-      aud.volume=1;
-      ch=[];mr=new MediaRecorder(dst.stream);
+      aud.volume=1;ch=[];mr=new MediaRecorder(dst.stream);
       mr.ondataavailable=e=>ch.push(e.data);
-      mr.onstop=()=>{
-        let b=new Blob(ch,{type:'audio/webm'});
-        let u=URL.createObjectURL(b);
-        let a=document.createElement('a');a.href=u;a.download='mano-show-'+Date.now()+'.webm';a.click();
-      };
-      mr.start();grav=true;btnR.style.background='#fff';btnR.style.color='#f00';mus.innerText='🔴 GRAVANDO - Clique de novo pra salvar';
-    }else{
-      mr.stop();grav=false;btnR.style.background='#ff0c0c';btnR.style.color='#fff';mus.innerText='Salvo na pasta Downloads!';setTimeout(()=>{ultima='';busca()},1500);
-    }
+      mr.onstop=()=>{let b=new Blob(ch,{type:'audio/webm'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='mano-show-'+Date.now()+'.webm';a.click();};
+      mr.start();grav=true;btnR.style.background='#fff';btnR.style.color='#f00';mus.innerText='🔴 GRAVANDO';
+    }else{mr.stop();grav=false;btnR.style.background='#ff0c0c';btnR.style.color='#fff';mus.innerText='Salvo!';setTimeout(()=>{ultima='';busca()},1000);}
   }catch(e){alert(e.message)}
 }
-async function buscarCapa(nome){try{let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://itunes.apple.com/search?term='+encodeURIComponent(nome)+'&media=music&limit=1'));let j=await r.json();if(j.results&&j.results[0]?.artworkUrl100){capa.src=j.results[0].artworkUrl100.replace('100x100bb','600x600bb');capa.classList.add('on')}}catch{}}
-async function busca(){if(grav)return;try{let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv'),{cache:'no-store'});let t=await r.text();let m=t.match(/"title":"([^"]+)"/);let nome=m?m[1]:'';let im=t.match(/"image":"([^"]+)"/)||t.match(/"art":"([^"]+)"/);let img=im?im[1].replace(/\\\//g,'/'):'';if(nome&&nome!==ultima){ultima=nome;mus.innerText=nome;if(img){capa.src=img;capa.classList.add('on')}else{buscarCapa(nome)}}}catch{}}
-setInterval(busca,5000);busca();
+async function buscarCapa(nome){
+  try{
+    let r=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(nome)+'&media=music&limit=1');
+    let j=await r.json();
+    if(j.results&&j.results[0]?.artworkUrl100){capa.src=j.results[0].artworkUrl100.replace('100x100bb','600x600bb');capa.classList.add('on');}
+  }catch{}
+}
+async function busca(){
+  if(grav) return;
+  try{
+    let r=await fetch('https://api.zeno.fm/mounts/metadata/0ctt516rnhovv',{cache:'no-store'});
+    let j=await r.json();
+    let nome=j.title|| (j.artist? j.artist+' - '+j.title : '') || j.now_playing || '';
+    if(j.artist && j.title) nome = j.artist+' - '+j.title;
+    if(nome && nome!==ultima && nome.length>2){ultima=nome;mus.innerText=nome;buscarCapa(nome);return;}
+  }catch{}
+  try{
+    let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/0ctt516rnhovv'),{cache:'no-store'});
+    let t=await r.text();
+    let m=t.match(/"title":"([^"]+)"/);
+    if(m && m[1]!==ultima && m[1].length>2){ultima=m[1];mus.innerText=m[1];buscarCapa(m[1]);}
+  }catch{}
+}
+setInterval(busca,4000);
+busca();
 </script>
 </body>
 </html>
