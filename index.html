@@ -21,39 +21,25 @@ body{background:#1570ff;font-family:Arial;padding-bottom:95px}
 .b.c{width:54px;height:54px;background:#0d57d8;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:22px}
 #menu{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99;display:none;align-items:end}
 #menu.aberto{display:flex}
-.menuBox{background:#fff;width:100%;border-radius:26px 26px 0 0;padding:22px;max-height:80vh;overflow:auto}
+.menuBox{background:#fff;width:100%;border-radius:26px 26px 0 0;padding:22px}
 .menuBox a{display:block;padding:14px 0;border-bottom:1px solid #eee;text-decoration:none;color:#000;font-weight:bold}
 </style>
 </head>
 <body>
-
-<div class="topo">
-<img src="logo.png">
-<img id="capa">
-</div>
-
+<div class="topo"><img src="logo.png"><img id="capa"></div>
 <div class="faixa"><div>🎵</div><div><small>Tocando agora</small><b id="mus">MANO SHOW - Ao vivo</b></div></div>
-
-<div class="meio">
-<button class="btnP" id="btnP" onclick="tocar()">▶ OUVIR</button>
-<button class="btnR" onclick="gravar()">●</button>
-</div>
-
+<div class="meio"><button class="btnP" id="btnP" onclick="tocar()">▶ OUVIR</button><button class="btnR" onclick="gravar()">●</button></div>
 <audio id="aud" crossorigin="anonymous" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
-
-<div id="menu" onclick="fecharMenu()">
-<div class="menuBox" onclick="event.stopPropagation()">
-<h2 style="margin-bottom:10px">MANO SHOW</h2>
-<a href="https://wa.me/5547991452690" target="_blank">📱 WhatsApp: (47) 99145-2690</a>
+<div id="menu" onclick="fecharMenu()"><div class="menuBox" onclick="event.stopPropagation()">
+<h2>MANO SHOW</h2>
+<a href="https://wa.me/5547991452690">📱 (47) 99145-2690</a>
 <a href="mailto:manoshowwebradio@gmail.com">📧 manoshowwebradio@gmail.com</a>
 <a href="https://www.instagram.com/manoshow.oficial" target="_blank">Instagram</a>
 <a href="https://www.facebook.com/share/1JwFP1k1Kb/" target="_blank">Facebook</a>
 <a href="https://www.tiktok.com/@manoshowwebradio" target="_blank">TikTok</a>
 <a href="https://youtube.com/@webradiomanoshow" target="_blank">YouTube</a>
-<a href="#" onclick="fecharMenu()" style="color:red;text-align:center;border:0">FECHAR MENU</a>
-</div>
-</div>
-
+<a href="#" onclick="fecharMenu()" style="color:red;text-align:center">FECHAR</a>
+</div></div>
 <div class="bar">
 <a class="b" href="https://wa.me/5547991452690" target="_blank"><div class="c">W</div>WhatsApp</a>
 <a class="b" href="https://www.facebook.com/share/1JwFP1k1Kb/" target="_blank"><div class="c">f</div>Facebook</a>
@@ -62,7 +48,6 @@ body{background:#1570ff;font-family:Arial;padding-bottom:95px}
 <a class="b" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="c">▶</div>YouTube</a>
 <button class="b" onclick="abrirMenu()"><div class="c">☰</div>Menu</button>
 </div>
-
 <script>
 const aud=document.getElementById('aud'),mus=document.getElementById('mus'),capa=document.getElementById('capa'),btnP=document.getElementById('btnP'),menu=document.getElementById('menu');
 let ctx,src,dst,mr,ch=[],grav=false,ultima='';
@@ -70,30 +55,8 @@ function tocar(){if(aud.paused){aud.play();btnP.innerText='II PAUSAR'}else{aud.p
 function abrirMenu(){menu.classList.add('aberto')}
 function fecharMenu(){menu.classList.remove('aberto')}
 async function gravar(){try{if(!grav){if(aud.paused){await aud.play();btnP.innerText='II PAUSAR'}if(!ctx){ctx=new AudioContext();src=ctx.createMediaElementSource(aud);dst=ctx.createMediaStreamDestination();src.connect(dst);src.connect(ctx.destination)}ch=[];mr=new MediaRecorder(dst.stream);mr.ondataavailable=e=>ch.push(e.data);mr.onstop=()=>{let b=new Blob(ch,{type:'audio/webm'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='mano-show-'+Date.now()+'.webm';a.click()};mr.start();grav=true;mus.innerText='🔴 GRAVANDO'}else{mr.stop();grav=false;mus.innerText='Salvo!';setTimeout(busca,1500)}}catch(e){alert(e.message)}}
-async function buscarCapa(nome){
- try{
-   let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://itunes.apple.com/search?term='+encodeURIComponent(nome)+'&media=music&limit=1'));
-   let j=await r.json();
-   if(j.results && j.results[0]?.artworkUrl100){
-     capa.src=j.results[0].artworkUrl100.replace('100x100bb','600x600bb');
-     capa.classList.add('on');
-   }
- }catch{}
-}
-async function busca(){
- if(grav)return;
- try{
-   let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/0ctt516rnhovv'),{cache:'no-store'});
-   let j=await r.json();
-   let t=j.title||j?.data?.title;
-   let img=j.image||j?.data?.image;
-   if(t && t!==ultima){
-     ultima=t; mus.innerText=t;
-     if(img){capa.src=img;capa.classList.add('on')}
-     else{buscarCapa(t)}
-   }
- }catch{}
-}
+async function buscarCapa(nome){try{let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://itunes.apple.com/search?term='+encodeURIComponent(nome)+'&media=music&limit=1'));let j=await r.json();if(j.results&&j.results[0]?.artworkUrl100){capa.src=j.results[0].artworkUrl100.replace('100x100bb','600x600bb');capa.classList.add('on')}}catch{}}
+async function busca(){if(grav)return;try{let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/0ctt516rnhovv'),{cache:'no-store'});let j=await r.json();let t=j.title||j?.data?.title;let img=j.image||j?.data?.image;if(t&&t!==ultima){ultima=t;mus.innerText=t;if(img){capa.src=img;capa.classList.add('on')}else{buscarCapa(t)}}}catch{}}
 setInterval(busca,6000);busca();
 </script>
 </body>
