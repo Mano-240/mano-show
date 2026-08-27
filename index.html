@@ -10,25 +10,21 @@ body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .capa{width:100%;max-width:380px;border-radius:24px;overflow:hidden;aspect-ratio:1/1;background:#0d5ed8}
 .capa img{width:100%;height:100%;object-fit:cover;display:block}
 .tocando{background:#d0e3ff;width:100%;max-width:380px;margin-top:16px;border-radius:50px;padding:8px 16px;display:flex;align-items:center;gap:12px;color:#0d2a5e}
-.tocando .ico{width:48px;height:48px;background:#a9c9ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
 .tocando b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;font-weight:900}
-.tocando span{font-size:13px;opacity:.7}
+#btnPlay{flex:1;background:#0e6eff;border:0;color:#fff;font-size:28px;font-weight:900;padding:22px 10px;border-radius:22px}
 .play-line{width:100%;max-width:380px;margin-top:22px;display:flex;gap:14px;align-items:center}
-#btnPlay{flex:1;background:#0e6eff;border:0;color:#fff;font-size:28px;font-weight:900;padding:22px 10px;border-radius:22px;cursor:pointer}
-#btnRec{width:88px;height:88px;background:#ff1313;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
-#btnRec span{width:26px;height:26px;background:#fff;border-radius:50%;display:block}
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#1570ff;display:flex;justify-content:space-around;padding:10px 2px 12px 2px;z-index:10}
-.b-item{display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;color:#fff;font-size:11px;font-weight:700;flex:1;cursor:pointer;border:0;background:none}
-.b-item .cir{width:58px;height:58px;background:#0d5ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#1570ff;display:flex;justify-content:space-around;padding:10px 2px 12px 2px}
+.b-item{display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;color:#fff;font-size:11px;font-weight:700;flex:1;border:0;background:none}
+.b-item.cir{width:58px;height:58px;background:#0d5ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
 #menuOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:20;align-items:center;justify-content:center;padding:16px}
 #menuBox{background:#fff;color:#222;width:100%;max-width:380px;border-radius:20px;padding:20px}
 </style>
 </head>
 <body>
 <div class="capa"><img id="capaMusica" src="logo.png" alt="Capa"></div>
-<div class="tocando"><div class="ico">🎵</div><div style="overflow:hidden;flex:1"><span>Tocando agora</span><b id="musica">Carregando...</b></div></div>
-<div class="play-line"><button id="btnPlay">II PAUSAR</button><div id="btnRec"><span></span></div></div>
-<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv" crossorigin="anonymous"></audio>
+<div class="tocando"><div style="width:48px;height:48px;background:#a9c9ff;border-radius:50%;display:flex;align-items:center;justify-content:center">🎵</div><div style="overflow:hidden;flex:1"><span style="font-size:13px;opacity:.7">Tocando agora</span><b id="musica">Carregando...</b></div></div>
+<div class="play-line"><button id="btnPlay">II PAUSAR</button><div style="width:88px;height:88px;background:#ff1313;border:4px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center"><span style="width:26px;height:26px;background:#fff;border-radius:50%;display:block"></span></div></div>
+<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
 <div class="bottom">
 <a class="b-item" href="https://wa.me/554791452690" target="_blank"><div class="cir">W</div>Whats</a>
 <a class="b-item" href="https://www.facebook.com/share/194uCTvuQC/" target="_blank"><div class="cir">f</div>Face</a>
@@ -42,15 +38,20 @@ body{background:#1570ff;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 const radio=document.getElementById('radio'),btnPlay=document.getElementById('btnPlay'),capa=document.getElementById('capaMusica'),musica=document.getElementById('musica');
 let tocando=true;radio.play().catch(()=>{tocando=false;btnPlay.textContent='▶ OUVIR'});
 btnPlay.onclick=async()=>{if(tocando){radio.pause();btnPlay.textContent='▶ OUVIR';tocando=false}else{await radio.play();btnPlay.textContent='II PAUSAR';tocando=true}};
-capa.onerror=function(){this.onerror=null;this.src='logo.png'};
+capa.onerror=function(){this.src='logo.png';};
+let ultima='';
 async function pegaMusica(){
  try{
   let r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/nowplaying/0ctt516rnhovv?t='+Date.now());
   let j=await r.json();
-  if(j.title) musica.textContent=j.title;
-  let img = j.image || j.art || j.artwork || j.now_playing?.art || j.data?.image || j.data?.artwork || j.now_playing?.image;
-  if(img && img.startsWith('http')){capa.src=img;}else{capa.src='logo.png';}
- }catch(e){capa.src='logo.png';}
+  if(j.title && j.title!==ultima){
+   ultima=j.title;
+   musica.textContent=j.title;
+   // SÓ USA CAPA DA ZENO, SE NÃO TIVER USA SUA LOGO
+   if(j.image && j.image.length>10) capa.src=j.image;
+   else capa.src='logo.png';
+  }
+ }catch(e){}
 }
 pegaMusica();setInterval(pegaMusica,8000);
 </script>
