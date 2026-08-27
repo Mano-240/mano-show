@@ -30,7 +30,7 @@ body{background:#1570ff;font-family:Arial;padding-bottom:100px}
 <div class="faixa"><div>🎵</div><div><small>Tocando agora</small><b id="mus">MANO SHOW - Ao vivo</b></div></div>
 <div class="meio"><button class="btnP" id="btnP" onclick="tocar()">▶ OUVIR</button><button class="btnR" id="btnR" onclick="gravar()">●</button></div>
 <audio id="aud" crossorigin="anonymous" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
-<div id="menu" onclick="fecharMenu()"><div class="menuBox" onclick="event.stopPropagation()"><h2>MANO SHOW</h2><a href="https://wa.me/5547991452690">📱 WhatsApp (47) 99145-2690</a><a href="mailto:manoshowwebradio@gmail.com">📧 manoshowwebradio@gmail.com</a><a href="https://www.instagram.com/manoshow.oficial" target="_blank">Instagram</a><a href="https://www.facebook.com/share/1JwFP1k1Kb/" target="_blank">Facebook</a><a href="https://www.tiktok.com/@manoshowwebradio" target="_blank">TikTok</a><a href="https://youtube.com/@webradiomanoshow" target="_blank">YouTube</a><a href="#" onclick="fecharMenu()" style="color:red;text-align:center">FECHAR</a></div></div>
+<div id="menu" onclick="fecharMenu()"><div class="menuBox" onclick="event.stopPropagation()"><h2>MANO SHOW</h2><a href="https://wa.me/5547991452690">WhatsApp (47) 99145-2690</a><a href="mailto:manoshowwebradio@gmail.com">Email</a><a href="https://www.instagram.com/manoshow.oficial" target="_blank">Instagram</a><a href="https://www.facebook.com/share/1JwFP1k1Kb/" target="_blank">Facebook</a><a href="https://www.tiktok.com/@manoshowwebradio" target="_blank">TikTok</a><a href="https://youtube.com/@webradiomanoshow" target="_blank">YouTube</a><a href="#" onclick="fecharMenu()" style="color:red;text-align:center">FECHAR</a></div></div>
 <div class="bar"><a class="b" href="https://wa.me/5547991452690" target="_blank"><div class="c">W</div>WhatsApp</a><a class="b" href="https://www.facebook.com/share/1JwFP1k1Kb/" target="_blank"><div class="c">f</div>Facebook</a><a class="b" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="c">◎</div>Instagram</a><a class="b" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="c">♪</div>TikTok</a><a class="b" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="c">▶</div>YouTube</a><button class="b" onclick="abrirMenu()"><div class="c">☰</div>Menu</button></div>
 <script>
 const aud=document.getElementById('aud'),mus=document.getElementById('mus'),capa=document.getElementById('capa'),btnP=document.getElementById('btnP'),btnR=document.getElementById('btnR'),menu=document.getElementById('menu');
@@ -53,7 +53,7 @@ async function gravar(){
       mr.ondataavailable=e=>ch.push(e.data);
       mr.onstop=()=>{let b=new Blob(ch,{type:'audio/webm'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='mano-show-'+Date.now()+'.webm';a.click();};
       mr.start();grav=true;btnR.style.background='#fff';btnR.style.color='#f00';mus.innerText='🔴 GRAVANDO';
-    }else{mr.stop();grav=false;btnR.style.background='#ff0c0c';btnR.style.color='#fff';mus.innerText='Salvo!';setTimeout(()=>{ultima='';busca()},1000);}
+    }else{mr.stop();grav=false;btnR.style.background='#ff0c0c';btnR.style.color='#fff';mus.innerText='Salvo!';}
   }catch(e){alert(e.message)}
 }
 async function buscarCapa(nome){
@@ -63,24 +63,34 @@ async function buscarCapa(nome){
     if(j.results&&j.results[0]?.artworkUrl100){capa.src=j.results[0].artworkUrl100.replace('100x100bb','600x600bb');capa.classList.add('on');}
   }catch{}
 }
-async function busca(){
-  if(grav) return;
+function iniciaZeno(){
   try{
-    let r=await fetch('https://api.zeno.fm/mounts/metadata/0ctt516rnhovv',{cache:'no-store'});
-    let j=await r.json();
-    let nome=j.title|| (j.artist? j.artist+' - '+j.title : '') || j.now_playing || '';
-    if(j.artist && j.title) nome = j.artist+' - '+j.title;
-    if(nome && nome!==ultima && nome.length>2){ultima=nome;mus.innerText=nome;buscarCapa(nome);return;}
-  }catch{}
-  try{
-    let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/0ctt516rnhovv'),{cache:'no-store'});
-    let t=await r.text();
-    let m=t.match(/"title":"([^"]+)"/);
-    if(m && m[1]!==ultima && m[1].length>2){ultima=m[1];mus.innerText=m[1];buscarCapa(m[1]);}
-  }catch{}
+    let es=new EventSource('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
+    es.onmessage=e=>{
+      if(grav) return;
+      try{
+        let d=JSON.parse(e.data);
+        let nome=d.streamTitle||d.title||'';
+        if(nome && nome!==ultima && nome.length>2){
+          ultima=nome;
+          mus.innerText=nome;
+          buscarCapa(nome);
+        }
+      }catch{}
+    };
+  }catch(e){
+    // fallback se EventSource falhar
+    setInterval(async()=>{
+      try{
+        let r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.zeno.fm/mounts/metadata/0ctt516rnhovv'));
+        let t=await r.text();
+        let m=t.match(/"title":"([^"]+)"/);
+        if(m && m[1]!==ultima){ultima=m[1];mus.innerText=m[1];buscarCapa(m[1]);}
+      }catch{}
+    },4000);
+  }
 }
-setInterval(busca,4000);
-busca();
+iniciaZeno();
 </script>
 </body>
 </html>
