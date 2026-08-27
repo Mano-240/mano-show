@@ -3,67 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mano Show Web Rádio - Ao Vivo</title>
-<style>body{margin:0;background:#000;color:#fff;font-family:Arial;text-align:center;padding-bottom:100px;}.logo{font-size:35px;font-weight:bold;color:red;margin-top:20px;}</style>
+<title>Mano Show Web Rádio</title>
+<style>
+body{margin:0;background:#1e64ff;font-family:Arial,sans-serif;text-align:center;color:#fff;padding-bottom:120px}
+.capa{width:92%;margin:15px auto;border-radius:30px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.capa img{width:100%;display:block}
+.tocando{background:#eef2ff;color:#1a2a5a;width:92%;margin:15px auto;padding:12px 15px;border-radius:30px;text-align:left;display:flex;align-items:center;gap:10px;font-weight:bold;font-size:14px;overflow:hidden;white-space:nowrap}
+.tocando span{color:#111;overflow:hidden;text-overflow:ellipsis}
+.controles{display:flex;justify-content:space-between;align-items:center;width:92%;margin:25px auto;gap:15px}
+.btn-ouvir{background:#174fe0;width:68%;padding:20px;border:none;border-radius:30px;color:white;font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-gravar{background:#ff0000;width:90px;height:90px;border-radius:50%;border:4px solid white;display:flex;align-items:center;justify-content:center}
+.btn-gravar span{background:white;width:30px;height:30px;border-radius:50%;display:block}
+.btn-gravar.gravando{animation:piscar 1s infinite}
+@keyframes piscar{0%{opacity:1}50%{opacity:0.3}100%{opacity:1}}
+.menu-baixo{position:fixed;bottom:0;left:0;right:0;background:#1e64ff;padding:15px 5px;display:flex;justify-content:space-around;overflow-x:auto}
+.item-menu{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:white;font-size:11px;font-weight:bold;min-width:60px}
+.circulo{background:#174fe0;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;border:2px solid rgba(255,255,255,0.2);margin-bottom:5px}
+audio{display:none}
+</style>
 </head>
 <body>
-<div class="logo">MANO SHOW WEB RÁDIO</div>
-<p>A Rádio Mais Top de Blumenau!</p>
 
-<div style="margin:15px; padding:20px; background:#111; border:2px solid red; border-radius:15px;">
-  <audio id="player" controls autoplay style="width:100%;">
-    <source src="https://stream.zeno.fm/0ctt516rnhovv" type="audio/mpeg">
-  </audio>
-  <br><br>
-  <button id="btnGravar" style="background:red; color:white; padding:15px 30px; border:none; border-radius:50px; font-weight:bold; font-size:16px;">🔴 GRAVAR MÚSICA</button>
-  <p id="status" style="color:yellow; font-size:13px; margin-top:10px;"></p>
+<div class="capa">
+<img id="capaArtista" src="https://i.imgur.com/8Km9tLL.jpg" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600'">
 </div>
 
-<nav style="position:fixed; bottom:0; left:0; right:0; background:#111; display:flex; justify-content:space-around; align-items:center; padding:10px 2px; z-index:9999; border-top:2px solid #ff0000;">
-  <a href="https://mano-240.github.io/mano-show/" style="color:white; text-align:center; text-decoration:none; font-size:9px;">🏠<br>INÍCIO</a>
-  <a href="https://wa.me/5547991452690" target="_blank" style="color:white; text-align:center; text-decoration:none; font-size:9px;">💬<br>ZAP</a>
-  <a href="mailto:manoshowwebradio@gmail.com" style="color:white; text-align:center; text-decoration:none; font-size:9px;">✉️<br>EMAIL</a>
-  <a href="https://youtube.com/@webradiomanoshow" target="_blank" style="color:white; text-align:center; text-decoration:none; font-size:9px;">▶️<br>YOUTUBE</a>
-  <a href="https://www.tiktok.com/@manoshowwebradio" target="_blank" style="color:white; text-align:center; text-decoration:none; font-size:9px;">🎵<br>TIKTOK</a>
-  <a href="https://www.facebook.com/share/18wbZj1F72/" target="_blank" style="color:white; text-align:center; text-decoration:none; font-size:9px;">📘<br>FACE</a>
-  <a href="https://www.instagram.com/manoshow.oficial" target="_blank" style="color:white; text-align:center; text-decoration:none; font-size:9px;">📸<br>INSTA</a>
-  <a href="#" onclick="document.getElementById('player').play(); return false;" style="color:red; text-align:center; text-decoration:none; font-size:9px; font-weight:bold;">🔴<br>AO VIVO</a>
-</nav>
+<div class="tocando">
+<div style="font-size:28px">🎵</div>
+<div><div style="font-weight:400;font-size:13px">Tocando agora</div><span id="nomeMusica">Diego e Victor Hugo - Tubarões...</span></div>
+</div>
+
+<audio id="player" controls autoplay crossorigin="anonymous">
+<source src="https://stream.zeno.fm/0ctt516rnhovv" type="audio/mpeg">
+</audio>
+
+<div class="controles">
+<button class="btn-ouvir" id="btnOuvir">▶️ OUVIR</button>
+<button class="btn-gravar" id="btnGravar"><span></span></button>
+</div>
+<p id="status" style="font-size:12px;height:15px;color:yellow"></p>
+
+<div class="menu-baixo">
+<a href="https://wa.me/5547991452690" class="item-menu"><div class="circulo">W</div>WhatsApp</a>
+<a href="https://www.facebook.com/share/18wbZj1F72/" class="item-menu"><div class="circulo">f</div>Facebook</a>
+<a href="https://www.instagram.com/manoshow.oficial" class="item-menu"><div class="circulo">◎</div>Instagram</a>
+<a href="https://www.tiktok.com/@manoshowwebradio" class="item-menu"><div class="circulo">♪</div>TikTok</a>
+<a href="https://youtube.com/@webradiomanoshow" class="item-menu"><div class="circulo">▶️</div>YouTube</a>
+<a href="#" class="item-menu"><div class="circulo">≡</div>Menu</a>
+</div>
 
 <script>
-let gravador, partes=[], gravando=false;
 const player=document.getElementById('player');
-const btn=document.getElementById('btnGravar');
+const btnOuvir=document.getElementById('btnOuvir');
+const btnGravar=document.getElementById('btnGravar');
 const status=document.getElementById('status');
-btn.onclick=async()=>{
-  if(!gravando){
-    try{
-      const stream=player.captureStream?player.captureStream():player.mozCaptureStream();
-      gravador=new MediaRecorder(stream);
-      partes=[];
-      gravador.ondataavailable=e=>{if(e.data.size>0)partes.push(e.data);};
-      gravador.onstop=()=>{
-        const blob=new Blob(partes,{type:'audio/mpeg'});
-        const url=URL.createObjectURL(blob);
-        const a=document.createElement('a');
-        a.href=url;
-        a.download='ManoShow-Musica-'+Date.now()+'.mp3';
-        a.click();
-        status.innerText='✅ MÚSICA GRAVADA E SALVA NO CELULAR!';
-      };
-      gravador.start();
-      gravando=true;
-      btn.innerText='⏹️ PARAR E SALVAR';
-      btn.style.background='#333';
-      status.innerText='🔴 GRAVANDO A MÚSICA...';
-    }catch(err){alert('Use Google Chrome no celular!');}
-  }else{
-    gravador.stop();
-    gravando=false;
-    btn.innerText='🔴 GRAVAR MÚSICA';
-    btn.style.background='red';
-  }
+let tocando=false;
+btnOuvir.onclick=()=>{if(tocando){player.pause();btnOuvir.innerHTML='▶️ OUVIR';tocando=false;}else{player.play();btnOuvir.innerHTML='⏸️ PAUSAR';tocando=true;}};
+
+// GRAVADOR
+let gravador, partes=[], gravando=false;
+btnGravar.onclick=async()=>{
+ if(!gravando){
+  try{
+   const stream=player.captureStream?player.captureStream():player.mozCaptureStream();
+   gravador=new MediaRecorder(stream);
+   partes=[];
+   gravador.ondataavailable=e=>{if(e.data.size>0)partes.push(e.data)};
+   gravador.onstop=()=>{
+    const blob=new Blob(partes,{type:'audio/mpeg'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='ManoShow-'+Date.now()+'.mp3';
+    a.click();
+    status.innerText='✅ Música salva nos Downloads!';
+    setTimeout(()=>status.innerText='',3000);
+   };
+   gravador.start();
+   gravando=true;
+   btnGravar.classList.add('gravando');
+   status.innerText='🔴 Gravando... clique de novo para salvar';
+  }catch(err){alert('Abre no Chrome!');}
+ }else{
+  gravador.stop();
+  gravando=false;
+  btnGravar.classList.remove('gravando');
+ }
 };
+player.onplay=()=>{tocando=true;btnOuvir.innerHTML='⏸️ PAUSAR';}
 </script>
 </body>
 </html>
