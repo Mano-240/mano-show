@@ -70,7 +70,7 @@ g.onclick=async()=>{
   }
   mp3Encoder = new lamejs.Mp3Encoder(1, audioCtx.sampleRate, 128);
   mp3Chunks=[];
-  processor = audioCtx.createScriptProcessor(16384,1,1); // 16384 = SEM FALHA
+  processor = audioCtx.createScriptProcessor(16384,1,1);
   processor.onaudioprocess=(e)=>{
     if(!gravando) return;
     let data=e.inputBuffer.getChannelData(0);
@@ -83,6 +83,7 @@ g.onclick=async()=>{
     if(mp3.length>0) mp3Chunks.push(mp3);
   };
   gainNode.connect(processor);
+  processor.connect(audioCtx.destination);
   gravando=true; g.textContent='⏹️ PARAR'; recTag.style.display='block';
  }else{
   gravando=false;
