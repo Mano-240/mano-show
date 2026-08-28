@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#1a4fff;color:#fff;font-family:Arial, sans-serif;text-align:center;padding-bottom:20px}
-.capa{width:90%;max-width:380px;height:420px;margin:18px auto 12px;border-radius:32px;overflow:hidden;background:#000;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.capa{width:90%;max-width:380px;height:420px;margin:18px auto 12px;border-radius:32px;overflow:hidden;background:#000}
 .capa img{width:100%;height:100%;object-fit:cover}
 .barra{background:#fff;color:#000;border-radius:50px;padding:12px 18px;margin:10px auto;width:94%;max-width:400px;display:flex;align-items:center;gap:12px;text-align:left}
 .barra b{font-size:16px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -15,100 +15,35 @@ body{margin:0;background:#1a4fff;color:#fff;font-family:Arial, sans-serif;text-a
 .btn-ouvir{background:#1030ff;border:none;color:#fff;font-size:36px;font-weight:900;padding:18px 40px;border-radius:30px;display:flex;align-items:center;gap:12px;cursor:pointer;flex:1;justify-content:center}
 .btn-ouvir span{width:58px;height:58px;background:#7ec8ff;border-radius:8px;display:flex;align-items:center;justify-content:center}
 .btn-rec{width:92px;height:92px;min-width:92px;background:#ff0000;border-radius:50%;border:5px solid #fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.menu{display:flex;justify-content:center;gap:9px;margin-top:28px;padding:0 6px;flex-wrap:nowrap}
+.menu{display:flex;justify-content:center;gap:9px;margin-top:28px}
 .item{width:58px;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#fff;font-size:10px;font-weight:700;gap:6px}
 .item .ico{width:58px;height:58px;background:#0d2fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px}
 </style>
 </head>
 <body>
-
-<div class="capa"><img id="capa" src="https://i.imgur.com/8Km9tLL.png"></div>
-
-<div class="barra">
-<div style="font-size:36px">🎵</div>
-<div style="overflow:hidden;line-height:1.2">
-<div style="font-size:13px;opacity:.6">Tocando agora</div>
-<b id="musica">Web Rádio Mano Show - Ao Vivo</b>
-</div>
-</div>
-
-<div class="player">
-<button class="btn-ouvir" id="play"><span>▶️</span> OUVIR</button>
-<div class="btn-rec" id="rec"><span id="bolinha" style="width:36px;height:36px;background:#fff;border-radius:50%;display:block"></span></div>
-</div>
-
+<div class="capa"><img id="capa" src="https://i.imgur.com/5a5p7wY.png"></div>
+<div class="barra"><div>🎵</div><div style="overflow:hidden"><div style="font-size:13px;opacity:.6">Tocando agora</div><b id="musica">Web Rádio Mano Show - Ao Vivo</b></div></div>
+<div class="player"><button class="btn-ouvir" id="play"><span>▶️</span> OUVIR</button><div class="btn-rec" id="rec"><span id="bolinha" style="width:36px;height:36px;background:#fff;border-radius:50%;display:block"></span></div></div>
 <div class="menu">
-<a class="item" href="https://wa.me/5547991452690" target="_blank"><div class="ico">W</div>WhatsApp</a>
-<a class="item" href="https://www.facebook.com/share/18wbZj1F72/" target="_blank"><div class="ico">f</div>Facebook</a>
-<a class="item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="ico">◎</div>Instagram</a>
+<a class="item" href="https://wa.me/5547991452690" target="_blank"><div class="ico">W</div>Whats</a>
+<a class="item" href="https://www.facebook.com/share/18wbZj1F72/" target="_blank"><div class="ico">f</div>Face</a>
+<a class="item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="ico">◎</div>Insta</a>
 <a class="item" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="ico">♪</div>TikTok</a>
 <a class="item" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="ico">▶</div>YouTube</a>
 <a class="item" href="#" onclick="document.getElementById('box').style.display='block';return false;"><div class="ico">≡</div>Menu</a>
 </div>
-
-<div id="box" style="display:none;position:fixed;top:0;right:0;width:80%;height:100%;background:#0a26d0;z-index:999;padding:20px;text-align:left">
-<div style="text-align:right;font-size:26px" onclick="this.parentElement.style.display='none'">✕</div>
-<h2>CONTATO</h2>
-<p>📧 manoshowwebradio@gmail.com</p>
-<a href="mailto:manoshowwebradio@gmail.com" style="background:red;color:#fff;padding:14px;border-radius:30px;display:block;text-align:center;text-decoration:none;margin-top:20px">ENVIAR E-MAIL</a>
-</div>
-
-<audio id="radio" crossorigin="anonymous" src="https://stream.zeno.fm/0ctt516rnhovv"></audio>
-
+<div id="box" style="display:none;position:fixed;top:0;right:0;width:80%;height:100%;background:#0a26d0;z-index:999;padding:20px;text-align:left"><div style="text-align:right;font-size:26px" onclick="this.parentElement.style.display='none'">✕</div><h2>CONTATO</h2><p>📧 manoshowwebradio@gmail.com</p><a href="mailto:manoshowwebradio@gmail.com" style="background:red;color:#fff;padding:14px;border-radius:30px;display:block;text-align:center;text-decoration:none;margin-top:20px">E-MAIL</a></div>
+<audio id="radio" crossorigin="anonymous" src="https://stream.zeno.fm/0ctt516rnhovv" playsinline preload="auto"></audio>
 <script>
-const radio=document.getElementById('radio');
-const btn=document.getElementById('play');
-const txt=document.getElementById('musica');
-const capa=document.getElementById('capa');
-
-btn.onclick=async()=>{
- if(radio.paused){
-  await radio.play();
-  btn.innerHTML="<span>⏸️</span> PAUSAR";
- }else{
-  radio.pause();
-  btn.innerHTML="<span>▶️</span> OUVIR";
- }
-};
-
-async function atualiza(){
- try{
-  let r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t='+Date.now());
-  let j=await r.json();
-  if(j.title) txt.textContent=j.title;
-  if(j.image) capa.src=j.image;
- }catch(e){}
-}
-setInterval(atualiza,6000);
-atualiza();
-
+const LOGO="https://i.imgur.com/5a5p7wY.png";
+const radio=document.getElementById('radio'),btn=document.getElementById('play'),txt=document.getElementById('musica'),capa=document.getElementById('capa');
+capa.src=LOGO;
+btn.onclick=async()=>{if(radio.paused){await radio.play();btn.innerHTML="<span>⏸️</span> PAUSAR";localStorage.setItem('tocando','sim')}else{radio.pause();btn.innerHTML="<span>▶️</span> OUVIR";localStorage.setItem('tocando','nao')}};
+document.addEventListener('visibilitychange',()=>{if(localStorage.getItem('tocando')=='sim'&&radio.paused)radio.play().catch(()=>{})});
+async function atualiza(){try{let r=await fetch('https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t='+Date.now());let j=await r.json();if(j.title)txt.textContent=j.title;if(j.image&&j.image!="")capa.src=j.image;else capa.src=LOGO;}catch{capa.src=LOGO;}}
+setInterval(atualiza,6000);atualiza();
 let mr=null,ch=[],gravando=false;
-document.getElementById('rec').onclick=async()=>{
- if(gravando){
-  mr.stop();
-  return;
- }
- if(radio.paused){alert("Dê PLAY primeiro!");return;}
- try{
-  let s=radio.captureStream();
-  ch=[];
-  mr=new MediaRecorder(s);
-  mr.ondataavailable=e=>ch.push(e.data);
-  mr.onstop=()=>{
-   let b=new Blob(ch,{type:'audio/webm'});
-   let u=URL.createObjectURL(b);
-   let a=document.createElement('a');
-   a.href=u;a.download='ManoShow-'+Date.now()+'.webm';a.click();
-   gravando=false;
-   document.getElementById('rec').style.border="5px solid #fff";
-   document.getElementById('bolinha').style.background="#fff";
-  };
-  mr.start();
-  gravando=true;
-  document.getElementById('rec').style.border="5px solid yellow";
-  document.getElementById('bolinha').style.background="yellow";
- }catch{alert("Use Google Chrome");}
-};
+document.getElementById('rec').onclick=async()=>{if(gravando){mr.stop();return;}if(radio.paused){alert("Dê PLAY!");return;}try{let s=radio.captureStream();ch=[];mr=new MediaRecorder(s,{mimeType:'audio/webm'});mr.ondataavailable=e=>ch.push(e.data);mr.onstop=()=>{let b=new Blob(ch,{type:'audio/webm'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download=txt.textContent.replace(/[^a-z0-9 ]/gi,"").substring(0,30)+' - ManoShow.mp3';a.click();gravando=false;document.getElementById('rec').style.border="5px solid #fff";document.getElementById('bolinha').style.background="#fff";};mr.start();gravando=true;document.getElementById('rec').style.border="5px solid yellow";document.getElementById('bolinha').style.background="yellow";}catch{alert("Use Chrome!");}};
 </script>
 </body>
 </html>
