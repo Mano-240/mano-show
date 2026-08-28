@@ -1,136 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web Rádio Mano Show</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mano Show</title>
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-bottom:120px}
-.capa{width:94%;max-width:420px;margin:15px auto;background:#000;border-radius:30px;overflow:hidden;height:420px;display:flex;align-items:center;justify-content:center;position:relative}
-.capa img{width:100%;height:100%;object-fit:cover;display:block}
-.barra{background:#fff;color:#000;border-radius:50px;padding:14px 18px;margin:15px auto;width:94%;max-width:420px;display:flex;align-items:center;gap:12px;text-align:left;overflow:hidden}
-.player{display:flex;align-items:center;gap:12px;width:94%;max-width:420px;margin:18px auto}
-.btn-ouvir{flex:1;background:#1438ff;border:2px solid #2a4bff;color:#fff;font-size:32px;font-weight:900;padding:20px;border-radius:35px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
-.btn-rec{width:85px;height:85px;background:#ff0000;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
-.btn-rec.gravando{animation:piscar 1s infinite;background:#fff;border-color:#ff0000}
-.btn-rec.gravando div{background:#ff0000!important}
-@keyframes piscar{0%,100%{opacity:1}50%{opacity:.6}}
-.menu-bar{position:fixed;bottom:0;left:0;width:100%;background:#1e4fff;padding:10px 5px 22px;display:flex;justify-content:space-around;border-top:1px solid rgba(255,255,255,.15);z-index:900}
-.item{color:#fff;text-decoration:none;font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:6px;width:16%}
-.ico{width:58px;height:58px;background:#0d2fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2px solid rgba(255,255,255,.25)}
-#side{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#0a1fff;z-index:999;padding:25px;text-align:left;transition:.35s}
-#side.aberto{right:0}
-#side a{color:#fff;text-decoration:none;display:block;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:15px}
-.fundo{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:998;display:none}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-bottom:130px}
+.capa{width:94%;max-width:420px;margin:12px auto;background:#000;border-radius:30px;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.capa img{width:100%;height:100%;object-fit:cover}
+.barra{background:#fff;color:#000;border-radius:50px;padding:14px 16px;margin:12px auto;width:94%;max-width:420px;display:flex;gap:10px;text-align:left;align-items:center}
+.player{display:flex;gap:10px;width:94%;max-width:420px;margin:15px auto;align-items:center}
+.btn-ouvir{flex:1;background:#1438ff;border:2px solid #2a4bff;color:#fff;font-size:30px;font-weight:900;padding:18px;border-radius:30px}
+.btn-rec{width:82px;height:82px;background:red;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center}
+.btn-rec.gravando{animation:p 1s infinite;background:#fff}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
+.menu-bar{position:fixed;bottom:0;left:0;width:100%;background:#1e4fff;padding:10px 0 20px;display:flex;justify-content:space-around;z-index:9}
+.item{color:#fff;text-decoration:none;font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:5px;width:16%}
+.ico{width:56px;height:56px;background:#0d2fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.3)}
+#side{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#0a1fff;z-index:999;padding:20px;text-align:left;transition:.3s}
+#side.aberto{right:0}#side a{color:#fff;text-decoration:none;display:block;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.2)}
+.fundo{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;z-index:998}
 .fundo.show{display:block}
 </style>
 </head>
 <body>
-<div class="capa"><img id="capa" src="logo.png" onerror="this.src='./logo.png'"></div>
-<div class="barra"><div style="font-size:30px">🎵</div><div style="flex:1;overflow:hidden"><div style="font-size:12px;opacity:.6">Tocando agora</div><b id="musica" style="font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Web Rádio Mano Show - Ao Vivo</b></div></div>
-<div class="player">
-<button class="btn-ouvir" id="play">▶️ OUVIR</button>
-<div class="btn-rec" id="rec" onclick="gravarMP3()"><div style="width:30px;height:30px;background:#fff;border-radius:50%"></div></div>
-</div>
-<div id="statusRec" style="font-size:12px;display:none">🔴 Gravando... clique pra salvar</div>
-<div id="statusConv" style="font-size:12px;display:none">⏳ Convertendo pra MP3...</div>
+<div class="capa"><img id="capa" src="./logo.png" alt="logo"></div>
+<div class="barra"><div style="font-size:28px">🎵</div><div style="overflow:hidden"><div style="font-size:11px;opacity:.6">Tocando agora</div><b id="musica" style="font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carregando nome da música...</b></div></div>
+<div class="player"><button class="btn-ouvir" id="play">▶️ OUVIR</button><div class="btn-rec" id="rec" onclick="gravar()"><div style="width:28px;height:28px;background:#fff;border-radius:50%"></div></div></div>
+<div id="st" style="font-size:12px;display:none">🔴 Gravando</div>
 <div class="menu-bar">
 <a class="item" href="https://wa.me/5547991452690" target="_blank"><div class="ico">W</div>WhatsApp</a>
 <a class="item" href="https://www.facebook.com/share/18wbZj1F72/" target="_blank"><div class="ico">f</div>Facebook</a>
 <a class="item" href="https://www.instagram.com/manoshow.oficial" target="_blank"><div class="ico">◎</div>Instagram</a>
 <a class="item" href="https://www.tiktok.com/@manoshowwebradio" target="_blank"><div class="ico">♪</div>TikTok</a>
 <a class="item" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="ico">▶</div>YouTube</a>
-<a class="item" href="#" onclick="abrirMenu()"><div class="ico">☰</div>Menu</a>
+<a class="item" href="#" onclick="abrir()"><div class="ico">☰</div>Menu</a>
 </div>
-<div class="fundo" id="fundo" onclick="fecharMenu()"></div>
-<div id="side">
-<h2>☰ Menu</h2>
-<a href="#" onclick="fecharMenu()">🏠 Início</a>
-<a href="https://wa.me/5547991452690">💬 WhatsApp</a>
-<a href="https://youtube.com/@webradiomanoshow">▶️ YouTube</a>
-<a href="mailto:webradiomanoshow@gmail.com">✉️ E-mail</a>
-<button onclick="fecharMenu()" style="margin-top:25px;background:transparent;border:1px solid #fff;color:#fff;padding:12px;border-radius:20px;width:100%">FECHAR</button>
-</div>
-<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv" crossorigin="anonymous" preload="auto" playsinline></audio>
+<div class="fundo" id="fundo" onclick="fechar()"></div>
+<div id="side"><h3>☰ MENU</h3><a href="#" onclick="fechar()">🏠 Início</a><a href="https://wa.me/5547991452690">💬 WhatsApp</a><a href="mailto:webradiomanoshow@gmail.com">✉️ E-mail</a><button onclick="fechar()" style="margin-top:20px;width:100%;padding:10px;border-radius:20px;border:1px solid #fff;background:transparent;color:#fff">FECHAR</button></div>
+<audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv" crossorigin="anonymous" preload="auto"></audio>
 <script>
-function abrirMenu(){document.getElementById('side').classList.add('aberto');document.getElementById('fundo').classList.add('show')}
-function fecharMenu(){document.getElementById('side').classList.remove('aberto');document.getElementById('fundo').classList.remove('show')}
+function abrir(){document.getElementById('side').classList.add('aberto');document.getElementById('fundo').classList.add('show')}
+function fechar(){document.getElementById('side').classList.remove('aberto');document.getElementById('fundo').classList.remove('show')}
 const r=document.getElementById('radio'), b=document.getElementById('play'), t=document.getElementById('musica'), c=document.getElementById('capa');
-b.onclick=async()=>{ if(r.paused){await r.play(); b.innerHTML="⏸️ PAUSAR";} else{r.pause(); b.innerHTML="▶️ OUVIR"} };
-
-async function up(){
-  try{
-    // TENTA 2 APIS DA ZENO
-    let urls = [
-      'https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv',
-      'https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv'
-    ];
-    for(let url of urls){
-      try{
-        let res = await fetch(url+'?t='+Date.now());
-        let txt = await res.text();
-        let j;
-        try{ j=JSON.parse(txt); }catch{ continue; }
-        console.log("ZENO RAW:", j);
-        let title = j.title || j.data?.title || j.streamTitle || j.nowPlaying?.title || j.song || "";
-        let image = j.image || j.data?.image || j.artwork || j.data?.artwork || "";
-        // Se vier no formato event stream
-        if(txt.includes('streamTitle')){
-           let m = txt.match(/"streamTitle":"([^"]+)"/);
-           if(m) title = m[1];
-        }
-        if(title){
-          t.textContent = title;
-          console.log("TITULO:", title);
-        }
-        if(image && image.startsWith('http')){
-          c.src = image;
-          console.log("CAPA:", image);
-        }
-        if(title) break;
-      }catch(e2){}
-    }
-  }catch(e){ console.log(e); }
+b.onclick=async()=>{if(r.paused){await r.play();b.textContent='⏸️ PAUSAR'}else{r.pause();b.textContent='▶️ OUVIR'}};
+async function getMeta(){
+ try{
+  const prox = "https://api.allorigins.win/raw?url=";
+  const url1 = prox + encodeURIComponent("https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t="+Date.now());
+  let res = await fetch(url1);
+  let j = await res.json();
+  console.log("API1",j);
+  let title = j.title || j.nowPlaying?.title || "";
+  let img = j.image || j.artwork || "";
+  if(title){ t.textContent = title; }
+  if(img){ c.src = img; }
+  if(!title){
+    // tenta segunda API
+    let res2 = await fetch(prox+encodeURIComponent("https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv"));
+    let txt = await res2.text();
+    let m = txt.match(/"streamTitle":"([^"]+)"/);
+    if(m && m[1]){ t.textContent = m[1]; }
+  }
+ }catch(e){ console.log("erro meta",e); t.textContent="Mano Show Ao Vivo - Blumenau"; }
 }
-// BUSCA RAPIDO
-setInterval(up,3000);
-up();
-// FORÇA LOGO GRANDONA NO INICIO
-c.style.objectFit="cover";
-
-let mediaRecorder, chunks=[], gravando=false;
-async function gravarMP3(){
-  if(!gravando){
-    if(r.paused){alert("Dá play primeiro!");return}
+setInterval(getMeta,4000);
+getMeta();
+// gravacao
+let mr,chunks=[],grav=false;
+async function gravar(){
+ if(!grav){
+  if(r.paused){alert("Dá play primeiro");return}
+  try{
+   let s = r.captureStream? r.captureStream() : r.mozCaptureStream();
+   mr = new MediaRecorder(s); chunks=[];
+   mr.ondataavailable = e=>{if(e.data.size>0)chunks.push(e.data)};
+   mr.onstop=async()=>{
+    document.getElementById('st').style.display='none';
     try{
-      let stream=r.captureStream? r.captureStream() : r.mozCaptureStream();
-      mediaRecorder=new MediaRecorder(stream); chunks=[];
-      mediaRecorder.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data) };
-      mediaRecorder.onstop=async()=>{
-        document.getElementById('statusRec').style.display='none';
-        document.getElementById('statusConv').style.display='block';
-        try{
-          let blob=new Blob(chunks,{type:'audio/webm'}); let arrayBuffer=await blob.arrayBuffer();
-          let ctx=new (window.AudioContext||window.webkitAudioContext)(); let audioBuffer=await ctx.decodeAudioData(arrayBuffer);
-          let encoder=new lamejs.Mp3Encoder(2,audioBuffer.sampleRate,128);
-          let left=audioBuffer.getChannelData(0); let right=audioBuffer.numberOfChannels>1? audioBuffer.getChannelData(1):left;
-          let l16=new Int16Array(left.length), r16=new Int16Array(right.length);
-          for(let i=0;i<left.length;i++){ l16[i]=left[i]*32767; r16[i]=right[i]*32767; }
-          let mp3Data=[]; let buf=encoder.encodeBuffer(l16,r16); if(buf.length>0) mp3Data.push(buf); buf=encoder.flush(); if(buf.length>0) mp3Data.push(buf);
-          let mp3Blob=new Blob(mp3Data,{type:'audio/mp3'}); let url=URL.createObjectURL(mp3Blob);
-          let a=document.createElement('a'); a.href=url; a.download='Mano-Show-'+new Date().toISOString().slice(0,19).replace(/:/g,'-')+'.mp3'; a.click(); ctx.close();
-        }catch(err){
-          let blob2=new Blob(chunks,{type:'audio/webm'}); let url2=URL.createObjectURL(blob2);
-          let a2=document.createElement('a'); a2.href=url2; a2.download='Mano-Show-'+Date.now()+'.mp3'; a2.click();
-        }
-        document.getElementById('statusConv').style.display='none';
-      };
-      mediaRecorder.start(100); gravando=true;
-      document.getElementById('rec').classList.add('gravando'); document.getElementById('statusRec').style.display='block';
-    }catch(e){alert("Navegador não permite gravar")}
-  }else{ mediaRecorder.stop(); gravando=false; document.getElementById('rec').classList.remove('gravando'); }
+     let blob=new Blob(chunks,{type:'audio/webm'}); let ab=await blob.arrayBuffer();
+     let ctx=new (window.AudioContext||window.webkitAudioContext)(); let buf=await ctx.decodeAudioData(ab);
+     let enc=new lamejs.Mp3Encoder(2,buf.sampleRate,128);
+     let l=buf.getChannelData(0), rr=buf.numberOfChannels>1?buf.getChannelData(1):l;
+     let l16=new Int16Array(l.length), r16=new Int16Array(rr.length);
+     for(let i=0;i<l.length;i++){l16[i]=l[i]*32767; r16[i]=rr[i]*32767}
+     let data=[]; let b1=enc.encodeBuffer(l16,r16); if(b1.length>0)data.push(b1); let b2=enc.flush(); if(b2.length>0)data.push(b2);
+     let mp3=new Blob(data,{type:'audio/mp3'}); let url=URL.createObjectURL(mp3);
+     let a=document.createElement('a'); a.href=url; a.download='ManoShow-'+Date.now()+'.mp3'; a.click();
+    }catch{
+     let blob2=new Blob(chunks,{type:'audio/webm'}); let url2=URL.createObjectURL(blob2);
+     let a2=document.createElement('a'); a2.href=url2; a2.download='ManoShow-'+Date.now()+'.webm'; a2.click();
+    }
+   };
+   mr.start(100); grav=true; document.getElementById('rec').classList.add('gravando'); document.getElementById('st').style.display='block';
+  }catch(e){alert("Seu navegador não deixa gravar")}
+ }else{ mr.stop(); grav=false; document.getElementById('rec').classList.remove('gravando');}
 }
 </script>
 </body>
