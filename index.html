@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1e4fff">
 <title>Mano Show</title>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-bottom:120px}
 .capa{width:94%;max-width:420px;margin:12px auto;background:#000;border-radius:30px;height:420px;overflow:hidden;position:relative}
@@ -48,7 +49,7 @@
 const r=document.getElementById('radio'), b=document.getElementById('play'), g=document.getElementById('gravar'), recTag=document.getElementById('REC');
 const capaEl=document.getElementById('capa'), nomeEl=document.getElementById('nome'), artEl=document.getElementById('artista');
 const LOGO='https://mano-240.github.io/mano-show/logo.png';
-let audioCtx, source, gainNode, compressor, recorder, chunks=[], gravando=false;
+let audioCtx, source, gainNode, compressor, processor, mp3Encoder, mp3Chunks=[], gravando=false;
 
 b.onclick=async()=>{
  if(r.paused){ await r.play(); b.textContent='⏸️ PAUSAR'; }
@@ -63,26 +64,38 @@ g.onclick=async()=>{
   if(!source){
     source = audioCtx.createMediaElementSource(r);
     compressor = audioCtx.createDynamicsCompressor();
-    compressor.threshold.value=-18; compressor.ratio.value=10; compressor.attack.value=0.005; compressor.release.value=0.2;
-    gainNode = audioCtx.createGain(); gainNode.gain.value=0.85;
+    compressor.threshold.value=-22; compressor.ratio.value=12; compressor.knee.value=20; compressor.attack.value=0.003; compressor.release.value=0.25;
+    gainNode = audioCtx.createGain(); gainNode.gain.value=0.9;
     source.connect(compressor); compressor.connect(gainNode); gainNode.connect(audioCtx.destination);
   }
-  const dest = audioCtx.createMediaStreamDestination();
-  gainNode.connect(dest);
-  chunks=[];
-  recorder = new MediaRecorder(dest.stream, {mimeType:'audio/webm;codecs=opus', audioBitsPerSecond:128000});
-  recorder.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data); };
-  recorder.onstop=()=>{
-    const blob=new Blob(chunks,{type:'audio/webm'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='mano-show-'+Date.now()+'.webm'; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  mp3Encoder = new lamejs.Mp3Encoder(1, audioCtx.sampleRate, 128);
+  mp3Chunks=[];
+  processor = audioCtx.createScriptProcessor(16384,1,1); // 16384 = SEM FALHA
+  processor.onaudioprocess=(e)=>{
+    if(!gravando) return;
+    let data=e.inputBuffer.getChannelData(0);
+    let int16=new Int16Array(data.length);
+    for(let i=0;i<data.length;i++){
+      let s = Math.max(-1, Math.min(1, data[i]));
+      int16[i] = s<0? s*32768 : s*32767;
+    }
+    let mp3=mp3Encoder.encodeBuffer(int16);
+    if(mp3.length>0) mp3Chunks.push(mp3);
   };
-  recorder.start(100);
+  gainNode.connect(processor);
   gravando=true; g.textContent='⏹️ PARAR'; recTag.style.display='block';
  }else{
-  recorder.stop();
-  gravando=false; g.textContent='⏺️ GRAVAR'; recTag.style.display='none';
+  gravando=false;
+  try{ gainNode.disconnect(processor); }catch(e){}
+  try{ processor.disconnect(); }catch(e){}
+  let final=mp3Encoder.flush(); if(final.length>0) mp3Chunks.push(final);
+  if(mp3Chunks.length>0){
+    let blob=new Blob(mp3Chunks,{type:'audio/mp3'});
+    let url=URL.createObjectURL(blob);
+    let a=document.createElement('a'); a.href=url; a.download='mano-show-'+Date.now()+'.mp3'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  g.textContent='⏺️ GRAVAR'; recTag.style.display='none'; mp3Chunks=[];
  }
 };
 
