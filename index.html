@@ -8,8 +8,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-bottom:120px}
-.capa{width:94%;max-width:420px;margin:15px auto;background:#000;border-radius:30px;overflow:hidden;height:360px}
-.capa img{width:100%;height:100%;object-fit:cover;display:block}
+.capa{width:94%;max-width:420px;margin:15px auto;background:#000;border-radius:30px;overflow:hidden;height:360px;display:flex;align-items:center;justify-content:center}
+.capa img{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 .barra{background:#fff;color:#000;border-radius:50px;padding:14px 18px;margin:15px auto;width:94%;max-width:420px;display:flex;align-items:center;gap:12px;text-align:left}
 .player{display:flex;align-items:center;gap:12px;width:94%;max-width:420px;margin:18px auto}
 .btn-ouvir{flex:1;background:#1438ff;border:2px solid #2a4bff;color:#fff;font-size:32px;font-weight:900;padding:20px;border-radius:35px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
@@ -28,17 +28,14 @@ body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-b
 </style>
 </head>
 <body>
-
 <div class="capa"><img id="capa" src="./logo.png"></div>
 <div class="barra"><div style="font-size:30px">🎵</div><div><div style="font-size:12px;opacity:.6">Tocando agora</div><b id="musica" style="font-size:14px">Web Rádio Mano Show - Ao Vivo</b></div></div>
-
 <div class="player">
 <button class="btn-ouvir" id="play">▶️ OUVIR</button>
 <div class="btn-rec" id="rec" onclick="gravarMP3()"><div style="width:30px;height:30px;background:#fff;border-radius:50%"></div></div>
 </div>
 <div id="statusRec" style="font-size:12px;display:none">🔴 Gravando... clique pra salvar em MP3 verdadeiro</div>
-<div id="statusConv" style="font-size:12px;display:none">⏳ Convertendo pra MP3...</div>
-
+<div id="statusConv" style="font-size:12px;display:none">⏳ Convertendo pra MP3 verdadeiro...</div>
 <div class="menu-bar">
 <a class="item" href="https://wa.me/5547991452690" target="_blank"><div class="ico">W</div>WhatsApp</a>
 <a class="item" href="https://www.facebook.com/share/18wbZj1F72/" target="_blank"><div class="ico">f</div>Facebook</a>
@@ -47,7 +44,6 @@ body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-b
 <a class="item" href="https://youtube.com/@webradiomanoshow" target="_blank"><div class="ico">▶</div>YouTube</a>
 <a class="item" href="#" onclick="abrirMenu()"><div class="ico">☰</div>Menu</a>
 </div>
-
 <div class="fundo" id="fundo" onclick="fecharMenu()"></div>
 <div id="side">
 <h2>☰ Menu</h2>
@@ -57,99 +53,70 @@ body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-b
 <a href="mailto:webradiomanoshow@gmail.com">✉️ E-mail</a>
 <button onclick="fecharMenu()" style="margin-top:25px;background:transparent;border:1px solid #fff;color:#fff;padding:12px;border-radius:20px;width:100%">FECHAR</button>
 </div>
-
 <audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv" crossorigin="anonymous" preload="auto" playsinline></audio>
-
 <script>
 function abrirMenu(){document.getElementById('side').classList.add('aberto');document.getElementById('fundo').classList.add('show')}
 function fecharMenu(){document.getElementById('side').classList.remove('aberto');document.getElementById('fundo').classList.remove('show')}
 const LOGO="./logo.png", r=document.getElementById('radio'), b=document.getElementById('play'), t=document.getElementById('musica'), c=document.getElementById('capa');
-
-b.onclick=async()=>{
-  if(r.paused){await r.play(); b.innerHTML="⏸️ PAUSAR"; ativaMediaSession();}
-  else{r.pause(); b.innerHTML="▶️ OUVIR"}
-};
+b.onclick=async()=>{ if(r.paused){await r.play(); b.innerHTML="⏸️ PAUSAR"; ativaMediaSession();} else{r.pause(); b.innerHTML="▶️ OUVIR"} };
 r.onplay=()=>{b.innerHTML="⏸️ PAUSAR"; ativaMediaSession();};
 r.onpause=()=>{b.innerHTML="▶️ OUVIR"};
-
 function ativaMediaSession(){
   if('mediaSession' in navigator){
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: t.textContent || 'Web Rádio Mano Show',
-      artist: 'Web Rádio Mano Show - Ao Vivo',
-      album: 'Web Rádio Mano Show',
-      artwork: [{src: c.src, sizes:'512x512', type:'image/png'}]
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:t.textContent||'Web Rádio Mano Show',
+      artist:'Web Rádio Mano Show - Ao Vivo',
+      album:'Web Rádio Mano Show',
+      artwork:[{src:c.src,sizes:'512x512',type:'image/png'}]
     });
-    navigator.mediaSession.setActionHandler('play', ()=>r.play());
-    navigator.mediaSession.setActionHandler('pause', ()=>r.pause());
+    navigator.mediaSession.setActionHandler('play',()=>r.play());
+    navigator.mediaSession.setActionHandler('pause',()=>r.pause());
   }
 }
 document.addEventListener('visibilitychange',()=>{ if(!r.paused) r.play().catch(()=>{}); });
-
 async function up(){
   try{
     let x=await fetch('https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t='+Date.now());
     let j=await x.json();
-    if(j.title){t.textContent=j.title; if(navigator.mediaSession?.metadata) navigator.mediaSession.metadata.title=j.title;}
-    if(j.image && j.image!=""){c.src=j.image; if(navigator.mediaSession?.metadata) navigator.mediaSession.metadata.artwork=[{src:j.image,sizes:'512x512',type:'image/png'}]}
-    else c.src=LOGO;
-  }catch{c.src=LOGO;}
+    let capaNova=j.image||j.artwork||"";
+    let musicaNova=j.title||"Web Rádio Mano Show - Ao Vivo";
+    t.textContent=musicaNova;
+    if(capaNova && capaNova.length>10){ c.src=capaNova; c.onerror=()=>{c.src=LOGO;}; }else{ c.src=LOGO; }
+    if(navigator.mediaSession?.metadata){ navigator.mediaSession.metadata.title=musicaNova; navigator.mediaSession.metadata.artwork=[{src:c.src,sizes:'512x512',type:'image/png'}]; }
+  }catch{ c.src=LOGO; }
 }
-setInterval(up,8000); up();
-
-// GRAVAÇÃO MP3 VERDADEIRO + SEGURA SEGUNDO PLANO
+setInterval(up,6000); up();
 let mediaRecorder, chunks=[], gravando=false;
 async function gravarMP3(){
   if(!gravando){
     if(r.paused){alert("Dá play primeiro!");return}
     try{
-      let stream = r.captureStream? r.captureStream() : r.mozCaptureStream();
-      mediaRecorder = new MediaRecorder(stream);
-      chunks=[];
-      mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data) };
-      mediaRecorder.onstop = async ()=>{
+      let stream=r.captureStream? r.captureStream() : r.mozCaptureStream();
+      mediaRecorder=new MediaRecorder(stream); chunks=[];
+      mediaRecorder.ondataavailable=e=>{ if(e.data.size>0) chunks.push(e.data) };
+      mediaRecorder.onstop=async()=>{
         document.getElementById('statusRec').style.display='none';
         document.getElementById('statusConv').style.display='block';
         try{
-          let blob = new Blob(chunks,{type:'audio/webm'});
-          let arrayBuffer = await blob.arrayBuffer();
-          let ctx = new (window.AudioContext||window.webkitAudioContext)();
-          let audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-          let encoder = new lamejs.Mp3Encoder(2, audioBuffer.sampleRate, 128);
-          let left = audioBuffer.getChannelData(0);
-          let right = audioBuffer.numberOfChannels>1? audioBuffer.getChannelData(1) : left;
-          let l16 = new Int16Array(left.length), r16 = new Int16Array(right.length);
+          let blob=new Blob(chunks,{type:'audio/webm'}); let arrayBuffer=await blob.arrayBuffer();
+          let ctx=new (window.AudioContext||window.webkitAudioContext)(); let audioBuffer=await ctx.decodeAudioData(arrayBuffer);
+          let encoder=new lamejs.Mp3Encoder(2,audioBuffer.sampleRate,128);
+          let left=audioBuffer.getChannelData(0); let right=audioBuffer.numberOfChannels>1? audioBuffer.getChannelData(1):left;
+          let l16=new Int16Array(left.length), r16=new Int16Array(right.length);
           for(let i=0;i<left.length;i++){ l16[i]=left[i]*32767; r16[i]=right[i]*32767; }
-          let mp3Data=[];
-          let buf = encoder.encodeBuffer(l16,r16);
-          if(buf.length>0) mp3Data.push(buf);
-          buf = encoder.flush();
-          if(buf.length>0) mp3Data.push(buf);
-          let mp3Blob = new Blob(mp3Data,{type:'audio/mp3'});
-          let url = URL.createObjectURL(mp3Blob);
-          let a=document.createElement('a');
-          a.href=url;
-          a.download='Web-Radio-Mano-Show-'+new Date().toISOString().slice(0,19).replace(/:/g,'-')+'.mp3';
-          a.click();
-          ctx.close();
+          let mp3Data=[]; let buf=encoder.encodeBuffer(l16,r16); if(buf.length>0) mp3Data.push(buf); buf=encoder.flush(); if(buf.length>0) mp3Data.push(buf);
+          let mp3Blob=new Blob(mp3Data,{type:'audio/mp3'}); let url=URL.createObjectURL(mp3Blob);
+          let a=document.createElement('a'); a.href=url; a.download='Mano-Show-'+new Date().toISOString().slice(0,19).replace(/:/g,'-')+'.mp3'; a.click(); ctx.close();
         }catch(err){
-          // se falhar a conversão, salva o original mesmo
-          let blob2 = new Blob(chunks,{type:'audio/webm'});
-          let url2 = URL.createObjectURL(blob2);
-          let a2=document.createElement('a'); a2.href=url2; a2.download='Web-Radio-Mano-Show-'+Date.now()+'.mp3'; a2.click();
+          let blob2=new Blob(chunks,{type:'audio/webm'}); let url2=URL.createObjectURL(blob2);
+          let a2=document.createElement('a'); a2.href=url2; a2.download='Mano-Show-'+Date.now()+'.mp3'; a2.click();
         }
         document.getElementById('statusConv').style.display='none';
       };
-      mediaRecorder.start(100);
-      gravando=true;
-      document.getElementById('rec').classList.add('gravando');
-      document.getElementById('statusRec').style.display='block';
-    }catch(e){alert("Seu navegador não permite gravar")}
-  }else{
-    mediaRecorder.stop();
-    gravando=false;
-    document.getElementById('rec').classList.remove('gravando');
-  }
+      mediaRecorder.start(100); gravando=true;
+      document.getElementById('rec').classList.add('gravando'); document.getElementById('statusRec').style.display='block';
+    }catch(e){alert("Navegador não permite gravar")}
+  }else{ mediaRecorder.stop(); gravando=false; document.getElementById('rec').classList.remove('gravando'); }
 }
 </script>
 </body>
