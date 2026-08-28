@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="capa"><div id="REC">● GRAVANDO MP3</div><img id="capa" src="./logo.png" onerror="this.src='https://mano-240.github.io/mano-show/logo.png'"></div>
-<div class="barra"><div>🎵</div><div style="overflow:hidden"><div style="font-size:10px;opacity:.6">Tocando agora</div><b id="nome" style="font-size:14px">Mano Show Ao Vivo</b><br><small id="artista" style="font-size:11px"></small></div></div>
+<div class="barra"><div>🎵</div><div style="overflow:hidden"><div style="font-size:10px;opacity:.6">Tocando agora</div><b id="nome" style="font-size:14px">Mano Show Ao Vivo</b><br><small id="artista"></small></div></div>
 <div class="player">
 <button class="btn" id="play">▶️ OUVIR</button>
 <button class="btn btn-gravar" id="gravar">⏺️ GRAVAR MP3</button>
@@ -41,7 +41,7 @@
 <a href="https://www.instagram.com/manoshow.oficial" style="background:#E4405F;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-weight:900;width:90%;max-width:300px;text-align:center">INSTAGRAM</a>
 <a href="https://www.tiktok.com/@manoshowwebradio" style="background:#000;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-weight:900;width:90%;max-width:300px;text-align:center">TIKTOK</a>
 <a href="https://youtube.com/@webradiomanoshow" style="background:#FF0000;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-weight:900;width:90%;max-width:300px;text-align:center">YOUTUBE</a>
-<div style="color:#fff;margin-top:20px;font-size:13px">Toque para fechar ✕</div>
+<div style="color:#fff;margin-top:20px">Toque para fechar ✕</div>
 </div>
 <audio id="radio" src="https://stream.zeno.fm/0ctt516rnhovv" preload="none" crossorigin="anonymous"></audio>
 <script>
@@ -51,8 +51,8 @@ b.onclick=async()=>{if(r.paused){await r.play();b.textContent='⏸️ PAUSAR'}el
 g.onclick=async()=>{
  if(!gravando){
   if(r.paused){ alert('Clica em OUVIR primeiro!'); return; }
-  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  source = audioCtx.createMediaElementSource(r);
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(!source){ source = audioCtx.createMediaElementSource(r); source.connect(audioCtx.destination); }
   processor = audioCtx.createScriptProcessor(4096,2,2);
   mp3Encoder = new lamejs.Mp3Encoder(2, audioCtx.sampleRate, 128);
   mp3Data=[];
@@ -64,7 +64,7 @@ g.onclick=async()=>{
     let mp3buf = mp3Encoder.encodeBuffer(l16,r16);
     if(mp3buf.length>0) mp3Data.push(mp3buf);
   };
-  source.connect(processor); processor.connect(audioCtx.destination); source.connect(audioCtx.destination);
+  source.connect(processor); processor.connect(audioCtx.destination);
   gravando=true; g.textContent='⏹️ PARAR'; recTag.style.display='block';
  }else{
   let mp3buf = mp3Encoder.flush();
@@ -72,7 +72,7 @@ g.onclick=async()=>{
   let blob = new Blob(mp3Data, {type:'audio/mp3'});
   let url = URL.createObjectURL(blob);
   let a=document.createElement('a'); a.href=url; a.download='mano-show-'+Date.now()+'.mp3'; a.click();
-  processor.disconnect(); source.disconnect(); audioCtx.close();
+  processor.disconnect();
   gravando=false; g.textContent='⏺️ GRAVAR MP3'; recTag.style.display='none'; mp3Data=[];
  }
 };
