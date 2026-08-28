@@ -77,7 +77,7 @@ g.onclick=async()=>{
   gravando=false; g.textContent='⏺️ GRAVAR'; recTag.style.display='none'; mp3Chunks=[];
  }
 };
-// API OFICIAL ZENO + CAPA DUPLO
+// CAPA VIA ITUNES DIRETO - 100% FUNCIONAL
 const es = new EventSource('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
 es.onmessage = async (event) => {
  try{
@@ -89,28 +89,18 @@ es.onmessage = async (event) => {
   let titulo = parts.length>1? parts.slice(1).join(' - ') : full;
   nomeEl.textContent = titulo;
   artEl.textContent = artista;
-  // BUSCA CAPA - TENTA DEEZER, SE FALHAR TENTA ITUNES
+  // busca capa no iTunes DIRETO (sem proxy)
   try{
-   let q = encodeURIComponent(titulo+' '+artista);
-   let resp = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.deezer.com/search?q='+q));
+   let q = encodeURIComponent(artista+' '+titulo);
+   let resp = await fetch('https://itunes.apple.com/search?term='+q+'&media=music&limit=1');
    let j = await resp.json();
-   if(j.data && j.data[0] && j.data[0].album && j.data[0].album.cover_big){
-    capaEl.src = j.data[0].album.cover_big;
+   if(j.results && j.results.length>0 && j.results[0].artworkUrl100){
+    let capa = j.results[0].artworkUrl100.replace('100x100bb','600x600bb');
+    capaEl.src = capa;
    } else {
-    throw 'tenta itunes';
+    capaEl.src = LOGO;
    }
-  }catch(e){
-   try{
-    let q2 = encodeURIComponent(titulo+' '+artista);
-    let resp2 = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://itunes.apple.com/search?term='+q2+'&media=music&limit=1'));
-    let j2 = await resp2.json();
-    if(j2.results && j2.results[0] && j2.results[0].artworkUrl100){
-     capaEl.src = j2.results[0].artworkUrl100.replace('100x100','600x600');
-    } else {
-     capaEl.src = LOGO;
-    }
-   }catch(e2){ capaEl.src = LOGO; }
-  }
+  }catch(e){ capaEl.src = LOGO; }
   if('mediaSession' in navigator &&!r.paused){
    navigator.mediaSession.metadata = new MediaMetadata({title:titulo, artist:artista||'Mano Show', artwork:[{src:capaEl.src, sizes:'512x512', type:'image/png'}]});
   }
