@@ -50,6 +50,7 @@ const r=document.getElementById('radio'), b=document.getElementById('play'), g=d
 const capaEl=document.getElementById('capa'), nomeEl=document.getElementById('nome'), artEl=document.getElementById('artista');
 const LOGO='https://mano-240.github.io/mano-show/logo.png';
 let audioCtx, source, processor, mp3Encoder, mp3Chunks=[], gravando=false;
+let compressor, gainNode, limiter;
 b.onclick=async()=>{
  if(r.paused){ await r.play(); b.textContent='⏸️ PAUSAR';
   if('mediaSession' in navigator){ navigator.mediaSession.metadata = new MediaMetadata({title:nomeEl.textContent, artist:artEl.textContent||'Mano Show', artwork:[{src:capaEl.src, sizes:'512x512', type:'image/png'}]}); }
@@ -60,24 +61,48 @@ g.onclick=async()=>{
   if(r.paused){ alert('Clica em OUVIR primeiro!'); return; }
   if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
   if(audioCtx.state==='suspended') await audioCtx.resume();
-  if(!source){ source = audioCtx.createMediaElementSource(r); source.connect(audioCtx.destination); }
+  if(!source){
+    source = audioCtx.createMediaElementSource(r);
+    compressor = audioCtx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-24, audioCtx.currentTime);
+    compressor.knee.setValueAtTime(30, audioCtx.currentTime);
+    compressor.ratio.setValueAtTime(12, audioCtx.currentTime);
+    compressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+    compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.7, audioCtx.currentTime);
+    limiter = audioCtx.createDynamicsCompressor();
+    limiter.threshold.setValueAtTime(-3, audioCtx.currentTime);
+    limiter.ratio.setValueAtTime(20, audioCtx.currentTime);
+    limiter.attack.setValueAtTime(0.001, audioCtx.currentTime);
+    limiter.release.setValueAtTime(0.05, audioCtx.currentTime);
+    source.connect(compressor);
+    compressor.connect(gainNode);
+    gainNode.connect(limiter);
+    limiter.connect(audioCtx.destination);
+  }
   mp3Encoder = new lamejs.Mp3Encoder(1, audioCtx.sampleRate, 128); mp3Chunks=[];
   processor = audioCtx.createScriptProcessor(4096,1,1);
   processor.onaudioprocess=(e)=>{
-    let data=e.inputBuffer.getChannelData(0); let int16=new Int16Array(data.length);
-    for(let i=0;i<data.length;i++) int16[i]=data[i]*32767;
+    let data=e.inputBuffer.getChannelData(0);
+    let int16=new Int16Array(data.length);
+    for(let i=0;i<data.length;i++){
+      let s = Math.max(-1, Math.min(1, data[i] * 0.8));
+      int16[i] = s < 0? s*32768 : s*32767;
+    }
     let mp3=mp3Encoder.encodeBuffer(int16); if(mp3.length>0) mp3Chunks.push(mp3);
   };
-  source.connect(processor); processor.connect(audioCtx.destination);
+  limiter.connect(processor); processor.connect(audioCtx.destination);
   gravando=true; g.textContent='⏹️ PARAR'; recTag.style.display='block';
  }else{
-  processor.disconnect();
+  try{ processor.disconnect(); }catch(e){}
+  try{ limiter.disconnect(processor); }catch(e){}
+  try{ limiter.connect(audioCtx.destination); }catch(e){}
   let final=mp3Encoder.flush(); if(final.length>0) mp3Chunks.push(final);
   if(mp3Chunks.length>0){ let blob=new Blob(mp3Chunks,{type:'audio/mp3'}); let url=URL.createObjectURL(blob); let a=document.createElement('a'); a.href=url; a.download='mano-show-'+Date.now()+'.mp3'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
   gravando=false; g.textContent='⏺️ GRAVAR'; recTag.style.display='none'; mp3Chunks=[];
  }
 };
-// CAPA VIA ITUNES DIRETO - 100% FUNCIONAL
 const es = new EventSource('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
 es.onmessage = async (event) => {
  try{
@@ -89,7 +114,6 @@ es.onmessage = async (event) => {
   let titulo = parts.length>1? parts.slice(1).join(' - ') : full;
   nomeEl.textContent = titulo;
   artEl.textContent = artista;
-  // busca capa no iTunes DIRETO (sem proxy)
   try{
    let q = encodeURIComponent(artista+' '+titulo);
    let resp = await fetch('https://itunes.apple.com/search?term='+q+'&media=music&limit=1');
@@ -97,9 +121,7 @@ es.onmessage = async (event) => {
    if(j.results && j.results.length>0 && j.results[0].artworkUrl100){
     let capa = j.results[0].artworkUrl100.replace('100x100bb','600x600bb');
     capaEl.src = capa;
-   } else {
-    capaEl.src = LOGO;
-   }
+   } else { capaEl.src = LOGO; }
   }catch(e){ capaEl.src = LOGO; }
   if('mediaSession' in navigator &&!r.paused){
    navigator.mediaSession.metadata = new MediaMetadata({title:titulo, artist:artista||'Mano Show', artwork:[{src:capaEl.src, sizes:'512x512', type:'image/png'}]});
