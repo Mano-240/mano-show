@@ -8,8 +8,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-bottom:120px}
-.capa{width:94%;max-width:420px;margin:15px auto;background:#000;border-radius:30px;overflow:hidden;height:420px;display:flex;align-items:center;justify-content:center;position:relative}
-.capa img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.capa{width:94%;max-width:420px;margin:15px auto;background:#000;border-radius:30px;overflow:hidden;height:420px;display:flex;align-items:center;justify-content:center}
+.capa img{width:100%;height:100%;object-fit:cover;display:block}
 .barra{background:#fff;color:#000;border-radius:50px;padding:14px 18px;margin:15px auto;width:94%;max-width:420px;display:flex;align-items:center;gap:12px;text-align:left;overflow:hidden}
 .player{display:flex;align-items:center;gap:12px;width:94%;max-width:420px;margin:18px auto}
 .btn-ouvir{flex:1;background:#1438ff;border:2px solid #2a4bff;color:#fff;font-size:32px;font-weight:900;padding:20px;border-radius:35px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
@@ -58,60 +58,21 @@ body{background:#1e4fff;color:#fff;font-family:Arial;text-align:center;padding-b
 function abrirMenu(){document.getElementById('side').classList.add('aberto');document.getElementById('fundo').classList.add('show')}
 function fecharMenu(){document.getElementById('side').classList.remove('aberto');document.getElementById('fundo').classList.remove('show')}
 const LOGO="./logo.png", r=document.getElementById('radio'), b=document.getElementById('play'), t=document.getElementById('musica'), c=document.getElementById('capa');
-b.onclick=async()=>{ if(r.paused){await r.play(); b.innerHTML="⏸️ PAUSAR"; ativaMediaSession();} else{r.pause(); b.innerHTML="▶️ OUVIR"} };
-r.onplay=()=>{b.innerHTML="⏸️ PAUSAR"; ativaMediaSession();};
-r.onpause=()=>{b.innerHTML="▶️ OUVIR"};
-function ativaMediaSession(){
-  if('mediaSession' in navigator){
-    navigator.mediaSession.metadata=new MediaMetadata({
-      title:t.textContent||'Web Rádio Mano Show',
-      artist:'Ao Vivo',
-      album:'Web Rádio Mano Show',
-      artwork:[{src:c.src,sizes:'512x512',type:'image/png'}]
-    });
-    navigator.mediaSession.setActionHandler('play',()=>r.play());
-    navigator.mediaSession.setActionHandler('pause',()=>r.pause());
-  }
-}
-document.addEventListener('visibilitychange',()=>{ if(!r.paused) r.play().catch(()=>{}); });
-
+b.onclick=async()=>{ if(r.paused){await r.play(); b.innerHTML="⏸️ PAUSAR";} else{r.pause(); b.innerHTML="▶️ OUVIR"} };
 async function up(){
   try{
-    let res = await fetch('https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t='+Date.now());
-    let j = await res.json();
-    // pega o objeto certo, a Zeno muda as vezes
-    let data = j.data || j.nowPlaying || j;
-    let titulo = data.title || data.song || data.artistTitle || data.artist_title || j.title || "";
-    let capa = data.image || data.artwork || data.imageURL || data.art || j.image || j.artwork || "";
-
-    if(titulo && titulo.length > 1){
-      t.textContent = titulo;
-    }
-
-    if(capa && capa.length > 10){
-      if(c.src!== capa){
-        c.src = capa;
-        c.style.objectFit = "cover";
-      }
-    }else{
-      // se não tem capa da música, mostra sua logo GRANDONA
-      if(!c.src.includes('logo.png')){
-        c.src = LOGO;
-        c.style.objectFit = "cover";
-      }
-    }
-
-    if(navigator.mediaSession?.metadata){
-      navigator.mediaSession.metadata.title = t.textContent;
-      navigator.mediaSession.metadata.artwork = [{src:c.src,sizes:'512x512',type:'image/png'}];
-    }
-  }catch(e){
-    // mantém logo grandona se der erro
-    if(c.src === "" ) c.src = LOGO;
-  }
+    let res=await fetch('https://zenoplay.zenomedia.com/api/zenofm/now-playing/0ctt516rnhovv?t='+Date.now());
+    let j=await res.json();
+    let d=j.data||j;
+    let nome=d.title||j.title||"";
+    let capaImg=d.image||j.image||"";
+    if(nome && nome.length>1){ t.textContent=nome; }
+    if(capaImg && capaImg.length>10){ c.src=capaImg; }
+    else{ if(!c.src.includes('logo.png')) c.src=LOGO; }
+    c.style.objectFit="cover";
+  }catch(e){}
 }
-setInterval(up,5000); up();
-
+setInterval(up,4000); up();
 let mediaRecorder, chunks=[], gravando=false;
 async function gravarMP3(){
   if(!gravando){
