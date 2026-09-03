@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1e4fff">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.png">
 <title>Mano Show</title>
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 <style>
@@ -21,7 +24,7 @@
 </style>
 </head>
 <body>
-<div class="capa"><div id="REC">● GRAVANDO</div><img id="capa" src="https://mano-240.github.io/mano-show/logo.png"></div>
+<div class="capa"><div id="REC">● GRAVANDO</div><img id="capa" src="logo.png"></div>
 <div class="barra"><div>🎵</div><div style="overflow:hidden"><div style="font-size:10px;opacity:.6">Tocando agora</div><b id="nome" style="font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Mano Show Ao Vivo</b><small id="artista" style="opacity:.7"></small></div></div>
 <div class="player">
 <button class="btn" id="play">▶️ OUVIR</button>
@@ -48,14 +51,12 @@
 <script>
 const r=document.getElementById('radio'), b=document.getElementById('play'), g=document.getElementById('gravar'), recTag=document.getElementById('REC');
 const capaEl=document.getElementById('capa'), nomeEl=document.getElementById('nome'), artEl=document.getElementById('artista');
-const LOGO='https://mano-240.github.io/mano-show/logo.png';
+const LOGO='logo.png';
 let audioCtx, source, gainNode, compressor, processor, mp3Encoder, mp3Chunks=[], gravando=false;
-
 b.onclick=async()=>{
  if(r.paused){ await r.play(); b.textContent='⏸️ PAUSAR'; }
  else{ r.pause(); b.textContent='▶️ OUVIR'; }
 };
-
 g.onclick=async()=>{
  if(!gravando){
   if(r.paused){ alert('Clica em OUVIR primeiro!'); return; }
@@ -99,7 +100,6 @@ g.onclick=async()=>{
   g.textContent='⏺️ GRAVAR'; recTag.style.display='none'; mp3Chunks=[];
  }
 };
-
 const es = new EventSource('https://api.zeno.fm/mounts/metadata/subscribe/0ctt516rnhovv');
 es.onmessage = async (event) => {
  try{
@@ -119,6 +119,7 @@ es.onmessage = async (event) => {
  }catch(e){}
 };
 capaEl.onerror=()=>{ capaEl.src=LOGO; };
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 </script>
 </body>
 </html>
